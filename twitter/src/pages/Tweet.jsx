@@ -1,28 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
 import LeftBar from '../components/LeftBar'
-import Middle from '../components/Middle'
 import RightBar from '../components/RightBar'
-function Home({ setCommentModal, commentModal }) {
+import SingleTweet from '../components/SingleTweet'
+
+function Tweet({ setCommentModal, commentModal }) {
     return (
         <Container>
             <LeftBar />
-            <Middle setCommentModal={setCommentModal} commentModal={commentModal} />
+            <SingleTweet commentModal={commentModal} setCommentModal={setCommentModal} />
             <RightBar />
         </Container>
     )
 }
 
-export default Home
+export default Tweet
 const Container = styled.div`
 flex:5;
 display:flex;
-/* overflow:scroll;
-::-webkit-scrollbar {
-  width: 0px;
-  
-};
-::-webkit-scrollbar-thumb {
- display:none
-}  */
 `

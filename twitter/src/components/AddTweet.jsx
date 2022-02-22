@@ -31,7 +31,9 @@ function AddTweet() {
         setAnchorEl(null);
     };
 
-
+    const handleTweet = (e) => {
+        setEmojis([e.target.value])
+    }
 
 
     const open = Boolean(anchorEl);
@@ -44,36 +46,44 @@ function AddTweet() {
                         <img src='/images/my-image.jpg' alt='' />
                     </UserImg>
                     <InputContainer>
-                        <TextInput type='text' name='tweet' placeholder='Quoi de neuf ?' defaultValue={emojis.join('')} />
+                        <TextInput type='text' name='tweet' placeholder='Quoi de neuf ?' value={emojis.join('')} onChange={handleTweet} />
                     </InputContainer>
                 </Top>
                 <Bottom>
                     <IconContainer>
-                        <Tooltip title="Médias" arrow>
-                            <UploadContainer>
-                                <LabelFile htmlFor='file'>
-                                    <Icon>
+
+                        <UploadContainer>
+                            <LabelFile htmlFor='file'>
+                                <Icon>
+                                    <Tooltip title="Médias" arrow>
                                         <PermMediaOutlinedIcon fontSize='small' />
-                                    </Icon>
-                                </LabelFile>
-                                <input type='file' id='file' style={{ display: 'none' }} />
-                            </UploadContainer>
-                        </Tooltip>
-                        <Tooltip title="GIF" arrow>
-                            <Icon>
+                                    </Tooltip>
+                                </Icon>
+                            </LabelFile>
+                            <input type='file' id='file' style={{ display: 'none' }} />
+                        </UploadContainer>
+
+
+                        <Icon>
+                            <Tooltip title="GIF" arrow>
                                 <GifOutlinedIcon fontSize='large' />
-                            </Icon>
-                        </Tooltip>
-                        <Tooltip title="Question" arrow>
-                            <Icon>
+                            </Tooltip>
+                        </Icon>
+
+
+                        <Icon>
+                            <Tooltip title="Question" arrow>
                                 <EqualizerRoundedIcon fontSize='small' />
-                            </Icon>
-                        </Tooltip>
-                        <Tooltip title="Emoji" arrow>
-                            <Icon onClick={handleClick} id={id}>
+                            </Tooltip>
+                        </Icon>
+
+
+                        <Icon onClick={handleClick} id={id}>
+                            <Tooltip title="Emoji" arrow>
                                 <SentimentSatisfiedOutlinedIcon fontSize='small' />
-                            </Icon>
-                        </Tooltip>
+                            </Tooltip>
+                        </Icon>
+
                         <Popover
                             id={id}
                             open={open}
@@ -100,16 +110,20 @@ function AddTweet() {
 
                             />
                         </Popover>
-                        <Tooltip title="Programmer" arrow>
-                            <Icon>
+
+                        <Icon>
+                            <Tooltip title="Programmer" arrow>
                                 <EventOutlinedIcon fontSize='small' />
-                            </Icon>
-                        </Tooltip>
-                        <Tooltip title="médias" arrow>
-                            <Icon>
+                            </Tooltip>
+                        </Icon>
+
+
+                        <Icon>
+                            <Tooltip title="médias" arrow>
                                 <RoomOutlinedIcon fontSize='small' />
-                            </Icon>
-                        </Tooltip>
+                            </Tooltip>
+                        </Icon>
+
 
                     </IconContainer>
                     <BtnContainer >

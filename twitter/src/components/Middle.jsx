@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import AddTweet from './AddTweet'
 import NavBar from './NavBar'
 import Posts from './Posts'
-function Middle() {
+function Middle({ commentModal, setCommentModal }) {
     return (
         <Container>
             <NavBar />
             <AddTweet />
-            <Posts />
+            <Posts commentModal={commentModal} setCommentModal={setCommentModal} />
         </Container>
     )
 }
@@ -16,6 +16,4 @@ function Middle() {
 export default Middle
 const Container = styled.div`
 flex:2;
-//height:100vh;
-
 `

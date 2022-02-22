@@ -2,15 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import Post from './Post'
 
-function Posts() {
+function Posts({ setCommentModal, commentModal }) {
     return (
         <Container>
-            <Post />
-            <Post />
-            <Post />
-            <Post />
-            <Post />
-            <Post />
+            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
         </Container>
     )
 }
