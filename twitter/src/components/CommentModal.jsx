@@ -11,13 +11,15 @@ import GifOutlinedIcon from '@material-ui/icons/GifOutlined';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import PermMediaOutlinedIcon from '@material-ui/icons/PermMediaOutlined';
 
-function CommentModal({ setCommentModal, commentModal }) {
-    const [emojis, setEmojis] = useState([])
+function CommentModal({ setCommentModal }) {
+    const [File, setFile] = useState(null)
+    const [tweet, setTweet] = useState([])
+
     const [chosenEmoji, setChosenEmoji] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const onEmojiClick = (event, emojiObject) => {
         setChosenEmoji(emojiObject.emoji);
-        setEmojis(prev => [...prev, emojiObject.emoji])
+        setTweet(prev => [...prev, emojiObject.emoji])
     };
 
     const handleClick = (event) => {
@@ -27,6 +29,15 @@ function CommentModal({ setCommentModal, commentModal }) {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleTweet = (e) => {
+        setTweet([e.target.value])
+
+    }
+    const handleFile = (e) => {
+        setFile(e.target.files[0])
+    }
+    console.log(File)
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
@@ -54,7 +65,7 @@ function CommentModal({ setCommentModal, commentModal }) {
                         </Top>
                         <Content>
 
-                            <Right> لقم لين قال امين</Right>
+                            <Right> hello guys are u ok ?</Right>
 
                             <Left>
                                 En réponse à <a href="#">@Rilik09 et @Luffy_sama_100</a></Left>
@@ -67,9 +78,21 @@ function CommentModal({ setCommentModal, commentModal }) {
                         <UserImg>
                             <img src="/images/my-image.jpg" alt="" />
                         </UserImg>
-                        <InputContainer>
-                            <CommentInput type='text' placeholder='Tweeter votre réponse' />
-                        </InputContainer>
+                        <Input>
+                            <InputContainer>
+                                <CommentInput type='text' placeholder='Tweeter votre réponse' value={tweet.join('')} onChange={handleTweet} />
+                            </InputContainer>
+                            {File &&
+                                <ImgContainer>
+                                    <img src={URL.createObjectURL(File)} alt='' />
+                                    <IC onClick={() => setFile(null)} >
+                                        <Tooltip title="Remove" arrow>
+                                            <CloseOutlinedIcon fontSize='medium' />
+                                        </Tooltip>
+                                    </IC>
+                                </ImgContainer>
+                            }
+                        </Input>
 
                     </CommentResponse>
                 </ModalBody>
@@ -83,7 +106,7 @@ function CommentModal({ setCommentModal, commentModal }) {
                                             <PermMediaOutlinedIcon fontSize='small' />
                                         </Icon>
                                     </LabelFile>
-                                    <input type='file' id='file' style={{ display: 'none' }} />
+                                    <input type='file' id='file' style={{ display: 'none' }} onChange={handleFile} />
                                 </UploadContainer>
                             </Tooltip>
                             <Tooltip title="GIF" arrow>
@@ -199,12 +222,7 @@ border-radius:50%;
 const ModalBody = styled.div`
 margin:15px 15px;
 `
-/* const Divider = styled.div`
-border:1px solid gray;
-height:100px;
-width:0px;
-background-color:gray;
-` */
+
 const CommentContainer = styled.div`
 display:flex;
 flex-direction:column;
@@ -215,7 +233,7 @@ display:flex;
 const Content = styled.div``
 const CommentResponse = styled.div`
 display:flex;
-align-items:center;
+align-items:flex-start;
 margin-top:15px;
 `
 const UserImg = styled.div`
@@ -243,15 +261,15 @@ color:gray;
 `
 
 const Right = styled.div`
-text-align:right;
+//text-align:right;
 width:80%;
-margin-left:90px;
+margin-left:40px;
 `
 const Left = styled.div`
 margin-top:20px;
 text-align:left;
 width:100%;
-margin-left:70px;
+margin-left:40px;
 a{
     color:rgb(29, 155, 240);
     text-decoration:none;
@@ -318,9 +336,48 @@ align-items:center;
 border:none;
 justify-content:center;
 padding:10px 20px;
+margin-right:5px;
 cursor:pointer;
 &:hover{
     background-color: #0c78c0;
 }
 
+`
+const Input = styled.div`
+display:flex;
+flex-direction:column;
+`
+const ImgContainer = styled.div`
+width:100%;
+height:100%;
+display:flex;
+align-items:top;
+justify-content:flex-start;
+img{
+    position:relative;
+    margin-bottom:15px;
+    width:50%;
+    height:60%;
+    border-radius:5px;
+    cursor:pointer;
+}
+`
+const IC = styled.div`
+color:white;
+position:absolute;
+display:flex;
+align-items:center;
+justify-content:center;
+background-color:rgba(21,32,43, 0.6);
+width:100%;
+height:100%;
+width:35px;
+cursor:pointer;
+height:35px;
+margin:5px 5px;
+border-radius:50%;
+&:hover{
+    background-color: rgba(21,32,43, 0.4);
+    color:white;
+}
 `

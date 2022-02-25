@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import TweetNav from './TweetNav'
 import TweetPost from './TweetPost'
 
-function SingleTweet({ setCommentModal, commentModal }) {
+function SingleTweet() {
     return (
         <Container>
             <TweetNav />
-            <TweetPost commentModal={commentModal} setCommentModal={setCommentModal} />
+            <TweetPost />
         </Container>
     )
 }

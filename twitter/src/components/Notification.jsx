@@ -4,11 +4,11 @@ import NotificationNav from './NotificationNav'
 import Posts from './Posts'
 import SingleNotification from './SingleNotification'
 
-function Notification({ setCommentModal, commentModal }) {
+function Notification() {
     return (
         <Container>
             <NotificationNav />
-            <SingleNotification setCommentModal={setCommentModal} commentModal={commentModal} />
+            <SingleNotification />
         </Container>
     )
 }

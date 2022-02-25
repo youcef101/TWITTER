@@ -4,11 +4,11 @@ import LeftBar from '../components/LeftBar'
 import RightBar from '../components/RightBar'
 import SingleTweet from '../components/SingleTweet'
 
-function Tweet({ setCommentModal, commentModal }) {
+function Tweet() {
     return (
         <Container>
             <LeftBar />
-            <SingleTweet commentModal={commentModal} setCommentModal={setCommentModal} />
+            <SingleTweet />
             <RightBar />
         </Container>
     )

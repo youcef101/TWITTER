@@ -12,78 +12,79 @@ function Comment({ setCommentModal, commentModal }) {
     const [like, setLike] = useState(false)
     return (
         <Container>
-            <Link to='/tweet'>
-                <CommentContainer>
-                    <TopPost>
-                        <UserImage>
-                            <img src='/images/my-image.jpg' alt='' />
-                        </UserImage>
-                        <UserInfo>
-                            <Up>
-                                <Username><a href='#'>Youcef Ben Khadem</a></Username>
-                                <Tag>youcef_khadem.</Tag>
-                                <PostedDate>13h</PostedDate>
-                            </Up>
-                            <Down>
-                                En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@Youcef_khadem</span>
-                            </Down>
-                        </UserInfo>
-                    </TopPost>
 
+            <CommentContainer>
+                <TopPost>
+                    <UserImage>
+                        <img src='/images/my-image.jpg' alt='' />
+                    </UserImage>
+                    <UserInfo>
+                        <Up>
+                            <Username><a href='#'>Youcef Ben Khadem</a></Username>
+                            <Tag>youcef_khadem.</Tag>
+                            <PostedDate>13h</PostedDate>
+                        </Up>
+                        <Down>
+                            En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@Youcef_khadem</span>
+                        </Down>
+                    </UserInfo>
+                </TopPost>
+                <Link to='/tweet'>
                     <Content >
                         hello guys how are u ?
                     </Content>
-                    <Bottom>
-                        <IconContainer>
-                            <Ic onClick={() => setCommentModal(true)} color='blue'>
-                                <Tooltip title="Répondre" placement="bottom" arrow>
-                                    <ChatBubbleOutlineTwoToneIcon fontSize='small' />
+                </Link>
+                <Bottom>
+                    <IconContainer>
+                        <Ic onClick={() => setCommentModal(true)} color='blue'>
+                            <Tooltip title="Répondre" placement="bottom" arrow>
+                                <ChatBubbleOutlineTwoToneIcon fontSize='small' />
+                            </Tooltip>
+
+                        </Ic>
+                        <Ic color='green'>
+                            <Tooltip title="Retweeter" placement="bottom" arrow>
+                                <CachedTwoToneIcon fontSize='small' />
+
+                            </Tooltip>
+
+                        </Ic>
+                        {!like ?
+                            <Ic color='rose' onClick={() => setLike(!like)}>
+                                <Tooltip title="Aimer" placement="bottom" arrow>
+                                    <FavoriteBorderIcon fontSize='small' />
+
                                 </Tooltip>
 
                             </Ic>
-                            <Ic color='green'>
-                                <Tooltip title="Retweeter" placement="bottom" arrow>
-                                    <CachedTwoToneIcon fontSize='small' />
-
+                            :
+                            <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
+                                <Tooltip title="Aimer" placement="bottom" arrow>
+                                    <FavoriteRoundedIcon fontSize='small' />
                                 </Tooltip>
 
                             </Ic>
-                            {!like ?
-                                <Ic color='rose' onClick={() => setLike(!like)}>
-                                    <Tooltip title="Aimer" placement="bottom" arrow>
-                                        <FavoriteBorderIcon fontSize='small' />
+                        }
+                        <Ic color='blue'>
+                            <Tooltip title="Partager" placement="bottom" arrow>
+                                <ShareOutlinedIcon fontSize='small' />
+                            </Tooltip>
+                        </Ic>
+                    </IconContainer>
+                </Bottom>
 
-                                    </Tooltip>
+            </CommentContainer>
 
-                                </Ic>
-                                :
-                                <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
-                                    <Tooltip title="Aimer" placement="bottom" arrow>
-                                        <FavoriteRoundedIcon fontSize='small' />
-                                    </Tooltip>
-
-                                </Ic>
-                            }
-                            <Ic color='blue'>
-                                <Tooltip title="Partager" placement="bottom" arrow>
-                                    <ShareOutlinedIcon fontSize='small' />
-                                </Tooltip>
-                            </Ic>
-                        </IconContainer>
-                    </Bottom>
-
-                </CommentContainer>
-            </Link>
         </Container>
     )
 }
 
 export default Comment
 const Container = styled.div`
-a{
+/* a{
     color:white;
     text-decoration:none;
-}
+} */
 `
 const CommentContainer = styled.div`
 cursor:pointer;
@@ -92,6 +93,10 @@ padding:10px 10px;
 display:flex;
 align-items:flex-start;
 flex-direction:column;
+a{
+    color:white;
+    text-decoration:none;
+};
 &:hover{
     background-color: #223344;
 }

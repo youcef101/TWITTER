@@ -3,11 +3,11 @@ import styled from 'styled-components'
 import LeftBar from '../components/LeftBar'
 import Middle from '../components/Middle'
 import RightBar from '../components/RightBar'
-function Home({ setCommentModal, commentModal }) {
+function Home() {
     return (
         <Container>
             <LeftBar />
-            <Middle setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Middle />
             <RightBar />
         </Container>
     )

@@ -4,11 +4,11 @@ import LeftBar from '../components/LeftBar'
 import Notification from '../components/Notification'
 import RightBar from '../components/RightBar'
 
-function Notifications({ setCommentModal, commentModal }) {
+function Notifications() {
     return (
         <Container>
             <LeftBar />
-            <Notification setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Notification />
             <RightBar />
         </Container>
     )

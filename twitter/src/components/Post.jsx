@@ -8,39 +8,43 @@ import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTw
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
+import CommentModal from './CommentModal';
 
-function Post({ setCommentModal, commentModal }) {
+function Post() {
+    const [commentModal, setCommentModal] = useState(false)
     const [like, setLike] = useState(false)
     return (
         <Container>
 
             <PostCard>
-                <Link to='/tweet'>
-                    <Top>
-                        <TopCard>
-                            <UserImg>
-                                <img src='/images/my-image.jpg' alt='' />
-                            </UserImg>
-                            <Infos>
-                                <Info>
-                                    <Username><a href="#">Youcef ben kHADEM</a></Username>
-                                    <Tag>@youcef_khadem.</Tag>
-                                    <PostedDate>14h</PostedDate>
-                                </Info>
+
+                <Top>
+                    <TopCard>
+                        <UserImg>
+                            <img src='/images/my-image.jpg' alt='' />
+                        </UserImg>
+                        <Infos>
+                            <Info>
+                                <Username><a href="#">Youcef ben kHADEM</a></Username>
+                                <Tag>@youcef_khadem.</Tag>
+                                <PostedDate>14h</PostedDate>
+                            </Info>
+                            <Link to='/tweet'>
                                 <TweetDesc>
                                     <p>Não é falta de criatividade do Oda, muito menos coincidência. Nami é uma princesa, assim como todas as outras garotas de rosto semelhante. O Oda tá jogando na nossa cara 👀
                                         #ONEPIECE</p>
                                 </TweetDesc>
-                            </Infos>
-                        </TopCard>
-                        <Tooltip title="Plus" arrow>
-                            <SettingIc>
-                                <MoreHorizIcon fontSize='small' />
-                            </SettingIc>
-                        </Tooltip>
+                            </Link>
+                        </Infos>
+                    </TopCard>
+                    <Tooltip title="Plus" arrow>
+                        <SettingIc>
+                            <MoreHorizIcon fontSize='small' />
+                        </SettingIc>
+                    </Tooltip>
 
-                    </Top>
-                </Link>
+                </Top>
+
                 <Content>
                     <img src='/images/my-image.jpg' alt='' style={{ marginBottom: '15px' }} />
                     <IconContainer>
@@ -89,7 +93,10 @@ function Post({ setCommentModal, commentModal }) {
                     </IconContainer>
                 </Content>
             </PostCard>
-
+            {
+                commentModal &&
+                <CommentModal commentModal={commentModal} setCommentModal={setCommentModal} />
+            }
         </Container>
     )
 }
@@ -105,10 +112,10 @@ cursor:pointer;
 
 `
 const PostCard = styled.div`
-a{
+/* a{
     color:white;
     text-decoration:none;
-}
+} */
 `
 const Top = styled.div`
 margin:10px 10px;
@@ -124,6 +131,10 @@ align-items:flex-start;
 const Infos = styled.div`
 display:flex;
 flex-direction:column;
+a{
+    color:white;
+    text-decoration:none;
+}
 `
 const UserImg = styled.div`
 img{

@@ -9,20 +9,21 @@ import PermMediaOutlinedIcon from '@material-ui/icons/PermMediaOutlined';
 import Tooltip from '@material-ui/core/Tooltip';
 import Picker from 'emoji-picker-react';
 import Popover from '@material-ui/core/Popover';
+import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 
 function AddTweet() {
-    const [tweet, setTweet] = useState('')
-    const [emojis, setEmojis] = useState([])
+    const [tweet, setTweet] = useState([])
+    const [file, setFile] = useState(null)
 
     const [chosenEmoji, setChosenEmoji] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const onEmojiClick = (event, emojiObject) => {
         setChosenEmoji(emojiObject.emoji);
-        setEmojis(prev => [...prev, emojiObject.emoji])
+        setTweet(prev => [...prev, emojiObject.emoji])
+
     };
 
-    console.log(chosenEmoji)
-    console.log(emojis)
+
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -32,12 +33,16 @@ function AddTweet() {
     };
 
     const handleTweet = (e) => {
-        setEmojis([e.target.value])
-    }
+        setTweet([e.target.value])
 
+    }
+    const handleFile = (e) => {
+        setFile(e.target.files[0])
+    }
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
+
     return (
         <Container>
             <AddContainer>
@@ -45,22 +50,34 @@ function AddTweet() {
                     <UserImg>
                         <img src='/images/my-image.jpg' alt='' />
                     </UserImg>
-                    <InputContainer>
-                        <TextInput type='text' name='tweet' placeholder='Quoi de neuf ?' value={emojis.join('')} onChange={handleTweet} />
-                    </InputContainer>
+                    <Input>
+                        <InputContainer>
+                            <TextInput type='text' name='tweet' placeholder='Quoi de neuf ?' value={tweet.join('')} onChange={handleTweet} />
+                        </InputContainer>
+                        {file &&
+                            <ImgContainer>
+                                <img src={URL.createObjectURL(file)} alt='' />
+                                <Ic onClick={() => setFile(null)}>
+                                    <Tooltip title="Remove" arrow>
+                                        <CloseOutlinedIcon fontSize='medium' />
+                                    </Tooltip>
+                                </Ic>
+                            </ImgContainer>
+                        }
+                    </Input>
                 </Top>
                 <Bottom>
                     <IconContainer>
 
                         <UploadContainer>
-                            <LabelFile htmlFor='file'>
+                            <LabelFile htmlFor='File'>
                                 <Icon>
                                     <Tooltip title="Médias" arrow>
                                         <PermMediaOutlinedIcon fontSize='small' />
                                     </Tooltip>
                                 </Icon>
                             </LabelFile>
-                            <input type='file' id='file' style={{ display: 'none' }} />
+                            <input type='file' id='File' style={{ display: 'none' }} onChange={handleFile} />
                         </UploadContainer>
 
 
@@ -151,6 +168,11 @@ margin:0px 15px;
 const Top = styled.div`
 display:flex;
 align-items:flex-start;
+
+`
+const Input = styled.div`
+display:flex;
+flex-direction:column;
 `
 const Bottom = styled.div`
 display:flex;
@@ -182,7 +204,7 @@ resize:none;
 overflow:hidden;
 &:focus{
     outline:none;
-    border-bottom:1px solid gray;
+    //border-bottom:1px solid gray;
 }
 `
 const IconContainer = styled.div`
@@ -225,3 +247,38 @@ cursor:pointer;
 
 const UploadContainer = styled.div``
 const LabelFile = styled.label``
+const ImgContainer = styled.div`
+width:100%;
+height:100%;
+//background-color:yellow;
+display:flex;
+align-items:top;
+justify-content:flex-start;
+img{
+    position:relative;
+    margin-bottom:15px;
+    width:90%;
+    height:60%;
+    border-radius:5px;
+    cursor:pointer;
+}
+`
+const Ic = styled.div`
+margin:5px 5px;
+color:white;
+position:absolute;
+display:flex;
+align-items:center;
+justify-content:center;
+background-color:rgba(21,32,43, 0.6);
+width:100%;
+height:100%;
+width:35px;
+cursor:pointer;
+height:35px;
+border-radius:50%;
+&:hover{
+    background-color: rgba(21,32,43, 0.4);
+    //color:white;
+}
+`

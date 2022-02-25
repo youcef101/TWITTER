@@ -8,8 +8,10 @@ import ShareOutlinedIcon from '@material-ui/icons/ShareOutlined';
 import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTwoTone';
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import TweetComments from './TweetComments';
+import CommentModal from './CommentModal';
 
-function TweetPost({ setCommentModal, commentModal }) {
+function TweetPost() {
+    const [commentModal, setCommentModal] = useState(false)
     const [like, setLike] = useState(false)
     return (
         <Container>
@@ -97,6 +99,10 @@ function TweetPost({ setCommentModal, commentModal }) {
                 </Bottom>
             </TweetContainer>
             <TweetComments setCommentModal={setCommentModal} commentModal={commentModal} />
+            {
+                commentModal &&
+                <CommentModal commentModal={commentModal} setCommentModal={setCommentModal} />
+            }
         </Container>
     )
 }

@@ -1,15 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Post from './Post'
 
-function Posts({ setCommentModal, commentModal }) {
+function Posts() {
     return (
         <Container>
-            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Post setCommentModal={setCommentModal} commentModal={commentModal} />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
+            <Post />
         </Container>
     )
 }

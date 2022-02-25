@@ -3,12 +3,12 @@ import styled from 'styled-components'
 import ProfileInfos from './ProfileInfos'
 import ProfileNav from './ProfileNav'
 import Posts from './Posts'
-function ProfilePage({ setEditModal, editModal, setCommentModal, commentModal }) {
+function ProfilePage() {
     return (
         <Container>
             <ProfileNav />
-            <ProfileInfos setEditModal={setEditModal} editModal={editModal} />
-            <Posts commentModal={commentModal} setCommentModal={setCommentModal} />
+            <ProfileInfos />
+            <Posts />
         </Container>
     )
 }

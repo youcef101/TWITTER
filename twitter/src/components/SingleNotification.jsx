@@ -7,8 +7,10 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ShareOutlinedIcon from '@material-ui/icons/ShareOutlined';
 import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTwoTone';
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
+import CommentModal from './CommentModal';
 
-function SingleNotification({ setCommentModal, commentModal }) {
+function SingleNotification() {
+    const [commentModal, setCommentModal] = useState(false)
     const [like, setLike] = useState(false)
     return (
         <Container>
@@ -116,7 +118,10 @@ function SingleNotification({ setCommentModal, commentModal }) {
                     </Info>
                 </Infos>
             </LikeTweetNotification>
-
+            {
+                commentModal &&
+                <CommentModal commentModal={commentModal} setCommentModal={setCommentModal} />
+            }
         </Container>
     )
 }

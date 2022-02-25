@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import RoomOutlinedIcon from '@material-ui/icons/RoomOutlined';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
 import EditProfileModal from './EditProfileModal';
 
-function ProfileInfos({ setEditModal, editModal }) {
-    console.log(editModal)
+function ProfileInfos() {
+    const [editModal, setEditModal] = useState(false)
     return (
         <Container>
             <ProfileCover>
@@ -57,6 +57,9 @@ function ProfileInfos({ setEditModal, editModal }) {
                     </Field>
                 </Bottom>
             </ProfileInfo>
+            {editModal &&
+                <EditProfileModal setEditModal={setEditModal} />
+            }
         </Container>
     )
 }
