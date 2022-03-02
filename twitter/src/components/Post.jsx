@@ -9,12 +9,27 @@ import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { Link } from 'react-router-dom';
 import CommentModal from './CommentModal';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import PersonAddDisabledOutlinedIcon from '@material-ui/icons/PersonAddDisabledOutlined';
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 
 function Post() {
     const [commentModal, setCommentModal] = useState(false)
     const [like, setLike] = useState(false)
+    const [setting, setSetting] = useState(false)
+    const ClosePopup = () => {
+        window.addEventListener('mouseup', (e) => {
+            const ele = document.getElementById('my-popup')
+            if (!ele?.contains(e.target)) {
+                setSetting(false)
+            } else {
+                setSetting(true)
+            }
+        })
+    }
     return (
-        <Container>
+        <Container onClick={ClosePopup}>
 
             <PostCard>
 
@@ -37,13 +52,49 @@ function Post() {
                             </Link>
                         </Infos>
                     </TopCard>
-                    <Tooltip title="Plus" arrow>
-                        <SettingIc>
-                            <MoreHorizIcon fontSize='small' />
-                        </SettingIc>
-                    </Tooltip>
-
+                    <Setting>
+                        <Tooltip title="Plus" arrow>
+                            <SettingIc onClick={() => setSetting(true)}>
+                                <MoreHorizIcon fontSize='small' />
+                            </SettingIc>
+                        </Tooltip>
+                        {setting &&
+                            <SettingPopup id='my-popup'>
+                                <Popup>
+                                    <Item style={{ color: 'red' }}>
+                                        <Ic>
+                                            <DeleteForeverOutlinedIcon fontSize='medium' />
+                                        </Ic>
+                                        <span>Supprimer</span>
+                                    </Item>
+                                    <Item style={{ color: 'gray' }}>
+                                        <Ic>
+                                            <EditOutlinedIcon fontSize='medium' />
+                                        </Ic>
+                                        <span>Edit</span>
+                                    </Item>
+                                    <Item style={{ color: 'gray' }}>
+                                        <Ic>
+                                            <PersonAddOutlinedIcon fontSize='medium' />
+                                        </Ic>
+                                        <span>Suivre @youcef_khadem</span>
+                                    </Item>
+                                    <Item style={{ color: 'gray' }}>
+                                        <Ic>
+                                            <PersonAddDisabledOutlinedIcon fontSize='medium' />
+                                        </Ic>
+                                        <span>Se désabonner @youcef_khadem</span>
+                                    </Item>
+                                </Popup>
+                            </SettingPopup>
+                        }
+                    </Setting>
                 </Top>
+
+
+
+
+
 
                 <Content>
                     <img src='/images/my-image.jpg' alt='' style={{ marginBottom: '15px' }} />
@@ -171,7 +222,7 @@ const SettingIc = styled.div`
 display:flex;
 align-items:center;
 cursor:pointer;
-
+position:relative;
 `
 const TweetDesc = styled.div`
 margin-left:10px;
@@ -238,4 +289,38 @@ font-size:12px;
 margin-bottom:-4px;
 margin-left:-38px;
 
+`
+const SettingPopup = styled.div`
+position:absolute;
+//right:0;
+margin-top:25px;
+margin-left:-280px;
+padding:10px 0px;
+background-color:rgba(21,32,43,1.00);
+width:280px;
+//height:300px;
+z-index:999;
+border-radius:10px;
+-webkit-box-shadow: 0px 3px 15px 5px rgba(253,253,253,0.11); 
+box-shadow: 0px 3px 15px 5px rgba(253,253,253,0.11);
+`
+const Popup = styled.div``
+const Setting = styled.div`
+display:flex;
+align-items:center;
+flex-direction:column;
+`
+const Item = styled.div`
+display:flex;
+align-items:center;
+padding:10px 10px;
+&:hover{
+    background-color:#223344;
+}
+`
+const Ic = styled.div`
+//color:gray;
+margin-right:10px;
+display:flex;
+align-items:center;
 `
