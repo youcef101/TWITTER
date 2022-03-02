@@ -59,5 +59,16 @@ router.get('/:tweetId/all', async (req, res) => {
     }
 })
 
+//get all comments
+router.get('/all/get', async (req, res) => {
+
+    try {
+        const comments = await Comment.find();
+        res.status(200).send(comments)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
 
 module.exports = router

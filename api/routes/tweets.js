@@ -96,4 +96,14 @@ router.get('/:tweetId/get', async (req, res) => {
     }
 })
 
+//get all tweets
+router.get('/all/get', async (req, res) => {
+    try {
+        const tweet = await Tweet.find();
+        res.status(200).send(tweet)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
 module.exports = router
