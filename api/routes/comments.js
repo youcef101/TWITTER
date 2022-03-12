@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 //add comment
 router.post('/add', async (req, res) => {
     try {
-        await Comment.create(req.body);
-        res.status(200).send('comment created successfully !!!')
+        const comment = await Comment.create(req.body);
+        res.status(200).send(comment)
     } catch (err) {
         res.status(500).send(err)
     }

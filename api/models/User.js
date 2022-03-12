@@ -29,6 +29,14 @@ const userSchema = mongoose.Schema({
         type: String,
         default: null
     },
+    bio: {
+        type: String,
+        default: null
+    },
+    site: {
+        type: String,
+        default: null
+    },
     country: {
         type: String,
         default: null

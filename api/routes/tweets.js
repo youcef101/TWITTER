@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 //add new tweet
 router.post('/add', async (req, res) => {
     try {
-        await Tweet.create(req.body)
-        res.status(200).send('tweet added successfully !!!')
+        const tweet = await Tweet.create(req.body)
+        res.status(200).send(tweet)
     } catch (err) {
         res.status(500).send(err)
     }
@@ -49,12 +49,14 @@ router.delete('/:tweetId/delete', async (req, res) => {
 router.put('/:tweetId/like', async (req, res) => {
     const tweet = await Tweet.findById(req.params.tweetId);
     try {
+
         if (!tweet.likes.includes(req.body.userId)) {
-            await tweet.updateOne({ $push: { likes: req.body.userId } });
-            res.status(200).send('you liked the tweet !!!')
+            const like = await Tweet.findByIdAndUpdate(req.params.tweetId, { $push: { likes: req.body.userId } }, { new: true })
+            //const id = like.likes.find(id => id === req.body.userId)
+            res.status(200).send(like)
         } else {
-            await tweet.updateOne({ $pull: { likes: req.body.userId } })
-            res.status(200).send('you unlike the tweet !!!')
+            const like = await Tweet.findByIdAndUpdate(req.params.tweetId, { $pull: { likes: req.body.userId } }, { new: true })
+            res.status(200).send(like)
         }
 
     } catch (err) {
@@ -69,7 +71,11 @@ router.get('/:userId/all', async (req, res) => {
     try {
         const current_user_tweet = all_tweet.filter(tweet => tweet.userId == req.params.userId)
         const tweets = all_tweet.filter(tweet => user_followings.includes(tweet.userId));
-        res.status(200).send(tweets.concat(current_user_tweet))
+        const sorted_tweets = tweets.concat(current_user_tweet).sort((a, b) => {
+            return b.createdAt - a.createdAt
+        })
+
+        res.status(200).send(sorted_tweets)
     } catch (err) {
         res.status(500).send(err)
     }
@@ -80,7 +86,10 @@ router.get('/:userId/get/timeline', async (req, res) => {
     try {
         const all_tweet = await Tweet.find();
         const timeline = all_tweet.filter(tweet => tweet.userId == req.params.userId)
-        res.status(200).send(timeline)
+        const sorted_timeline_tweets = timeline.sort((a, b) => {
+            return b.createdAt - a.createdAt
+        })
+        res.status(200).send(sorted_timeline_tweets)
     } catch (err) {
         res.status(500).send(err)
     }

@@ -6,12 +6,12 @@ router.get('/', (req, res) => {
     res.status(200).send('hello from user route !!')
 })
 
-//edit user
+//edit user infos
 router.put('/:userId/edit', async (req, res) => {
     try {
         if (req.params.userId === req.body.userId) {
-            await User.updateOne(req.body)
-            res.status(200).send('your account updated successfully !!!')
+            const user = await User.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true });
+            res.status(200).send(user)
         } else {
             res.status(400).send('you are not allowed to edit this user !!!')
         }
@@ -21,6 +21,34 @@ router.put('/:userId/edit', async (req, res) => {
     }
 })
 
+//edit user profile photo
+router.put('/:userId/edit/profile/photo', async (req, res) => {
+    try {
+        if (req.params.userId === req.body.userId) {
+            const user = await User.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
+            res.status(200).send(user)
+        } else {
+            res.status(400).send('you are not allowed to edit this user !!!')
+        }
+
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+//edit user profile couverture
+router.put('/:userId/edit/profile/cover', async (req, res) => {
+    try {
+        if (req.params.userId === req.body.userId) {
+            const user = await User.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true })
+            res.status(200).send(user)
+        } else {
+            res.status(400).send('you are not allowed to edit this user !!!')
+        }
+
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
 //delete user
 router.delete('/:userId/delete', async (req, res) => {
     try {
@@ -125,4 +153,13 @@ router.get('/:userId/notFollow', async (req, res) => {
     }
 })
 
+//get all users
+router.get('/get/all', async (req, res) => {
+    try {
+        const users = await User.find();
+        res.status(200).send(users)
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
 module.exports = router
