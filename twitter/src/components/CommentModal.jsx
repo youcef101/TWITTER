@@ -10,16 +10,23 @@ import SentimentSatisfiedOutlinedIcon from '@material-ui/icons/SentimentSatisfie
 import GifOutlinedIcon from '@material-ui/icons/GifOutlined';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import PermMediaOutlinedIcon from '@material-ui/icons/PermMediaOutlined';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import app from '../firebase'
+import { format } from 'timeago.js'
+import { useSelector } from 'react-redux';
+import { addComment } from '../redux/apiCalls';
+import { useDispatch } from 'react-redux';
 
-function CommentModal({ setCommentModal }) {
+function CommentModal({ setCommentModal, tweet, tweet_user_infos }) {
+    const dispatch = useDispatch()
+    const user = useSelector(state => state.user.current_user)
     const [File, setFile] = useState(null)
-    const [tweet, setTweet] = useState([])
-
+    const [Comment, setComment] = useState([])
     const [chosenEmoji, setChosenEmoji] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const onEmojiClick = (event, emojiObject) => {
         setChosenEmoji(emojiObject.emoji);
-        setTweet(prev => [...prev, emojiObject.emoji])
+        setComment(prev => [...prev, emojiObject.emoji])
     };
 
     const handleClick = (event) => {
@@ -31,13 +38,67 @@ function CommentModal({ setCommentModal }) {
     };
 
     const handleTweet = (e) => {
-        setTweet([e.target.value])
+        setComment([e.target.value])
 
     }
     const handleFile = (e) => {
         setFile(e.target.files[0])
     }
-    console.log(File)
+
+    const AddComment = (e) => {
+        e.preventDefault();
+        if (File) {
+            const fileName = new Date().getTime() + File.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, File);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
+                    }
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const newComment = {
+                            tweetId: tweet?._id,
+                            userId: user?._id,
+                            content: Comment.join(''),
+                            commentImage: downloadURL
+                        }
+                        addComment(newComment, dispatch)
+                        setComment([])
+                        setFile(null)
+                        setCommentModal(false)
+
+                    });
+                }
+            );
+        } else {
+            const newComment = {
+                tweetId: tweet?._id,
+                userId: user?._id,
+                content: Comment.join(''),
+
+            }
+            addComment(newComment, dispatch)
+            setComment([])
+            setFile(null)
+            setCommentModal(false)
+        }
+    }
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
@@ -55,20 +116,24 @@ function CommentModal({ setCommentModal }) {
                     <CommentContainer>
                         <Top>
                             <UserImg>
-                                <img src="/images/my-image.jpg" alt="" />
+                                <img src={tweet_user_infos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt="" />
                             </UserImg>
                             <Info>
-                                <Username>Youcef Ben Khadem </Username>
-                                <Tag>@youcef_khadem.</Tag>
-                                <PostedDate>2h</PostedDate>
+                                <Username>{tweet_user_infos?.fullname} </Username>
+                                <Tag>@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</Tag>
+                                <PostedDate>{format(tweet?.createdAt)} </PostedDate>
                             </Info>
                         </Top>
                         <Content>
-
-                            <Right> hello guys are u ok ?</Right>
-
+                            <div style={{ marginLeft: '40px', color: 'rgb(29, 155, 240)', cursor: 'pointer', fontSize: '17px', fontWeight: '600' }}>
+                                {tweet?.hashTag}
+                            </div>
+                            <Right>{tweet?.content}</Right>
+                            <div style={{ marginLeft: '40px', marginTop: '15px' }}>
+                                <img src={tweet?.tweetImage} alt='' style={{ height: '200px' }} />
+                            </div>
                             <Left>
-                                En réponse à <a href="#">@Rilik09 et @Luffy_sama_100</a></Left>
+                                En réponse à <a href="#">@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</a></Left>
                         </Content>
 
                     </CommentContainer>
@@ -76,11 +141,11 @@ function CommentModal({ setCommentModal }) {
                     <CommentResponse>
 
                         <UserImg>
-                            <img src="/images/my-image.jpg" alt="" />
+                            <img src={user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt="" />
                         </UserImg>
                         <Input>
                             <InputContainer>
-                                <CommentInput type='text' placeholder='Tweeter votre réponse' value={tweet.join('')} onChange={handleTweet} />
+                                <CommentInput type='text' placeholder='Tweeter votre réponse' value={Comment.join('')} onChange={handleTweet} />
                             </InputContainer>
                             {File &&
                                 <ImgContainer>
@@ -162,7 +227,7 @@ function CommentModal({ setCommentModal }) {
                             </Tooltip>
 
                         </IconContainer>
-                        <BtnContainer >
+                        <BtnContainer onClick={AddComment} >
                             <span>Tweeter</span>
                         </BtnContainer>
                     </Bottom>
@@ -190,19 +255,27 @@ justify-content:center;
 const ModalContainer = styled.div`
 background-color:rgba(21,32,43,1.00);
 width:45%;
-//min-height:30%;
-//z-index:999;
+height:60vh;
+overflow-x:hidden;
 border-radius:10px;
-//margin:50px 10px;
+overflow-y:scroll;
+::-webkit-scrollbar {
+  width: 10px;
+};
+::-webkit-scrollbar-thumb {
+  background: #b3b3b3;
+  border-radius: 10px;
+};
 
 `
 const ModalHeader = styled.div`
-// height:50px;
-// background-color: rgba(21,32,43, 0.9);
-// position:sticky;
-// z-index:999;
-// display:flex;
-// align-items:center;
+height:40px;
+background-color: rgba(21,32,43, 0.9);
+position:sticky;
+z-index:999;
+top:0;
+right:0;
+left:0;
 
 `
 const Ic = styled.div`
@@ -261,7 +334,6 @@ color:gray;
 `
 
 const Right = styled.div`
-//text-align:right;
 width:80%;
 margin-left:40px;
 `
@@ -346,6 +418,7 @@ cursor:pointer;
 const Input = styled.div`
 display:flex;
 flex-direction:column;
+width:100%;
 `
 const ImgContainer = styled.div`
 width:100%;

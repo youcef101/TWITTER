@@ -17,7 +17,8 @@ const commentSlice = createSlice({
         addCommentSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            state.comment = action.payload
+            //state.comment = action.payload;
+            state.tweet_comments.push(action.payload)
         },
         addCommentFailure: (state) => {
             state.error = true;

@@ -20,4 +20,5 @@ export default Profile
 const Container = styled.div`
 flex:5;
 display:flex;
+//overflow-x:hidden;
 `

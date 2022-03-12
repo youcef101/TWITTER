@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const initialState = {
     all_tweets: [],//all tweets
     tweets: [],// tweets for home page
-    timline_tweets: [],//current_user tweets into profile page
+    timeline_tweets: [],//current_user tweets into profile page
     tweet: null,//current_tweet
     error: false,
     isFetching: false
@@ -18,7 +18,8 @@ const tweetSlice = createSlice({
         addTweetSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            state.tweet = action.payload
+            //state.tweet = action.payload
+            state.tweets.unshift(action.payload)
         },
         addTweetFailure: (state) => {
             state.error = true;
@@ -61,7 +62,7 @@ const tweetSlice = createSlice({
         getProfileTweetsSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            state.timline_tweets = action.payload;
+            state.timeline_tweets = action.payload;
         },
         getProfileTweetsFailure: (state) => {
             state.error = true;
@@ -88,7 +89,7 @@ const tweetSlice = createSlice({
         deleteTweetSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            state.timline_tweets.filter(tweet => tweet._id !== action.payload.id)
+            state.timeline_tweets.filter(tweet => tweet._id !== action.payload.id)
         },
         deleteTweetFailure: (state) => {
             state.error = true;
@@ -101,8 +102,8 @@ const tweetSlice = createSlice({
         updateTweetSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            state.timline_tweets[
-                state.timline_tweets.findIndex((item) => item._id === action.payload.id)
+            state.timeline_tweets[
+                state.timeline_tweets.findIndex((item) => item._id === action.payload.id)
             ] = action.payload.tweet;
         },
         updateTweetFailure: (state) => {
@@ -116,9 +117,9 @@ const tweetSlice = createSlice({
         likedTweetSuccess: (state, action) => {
             state.error = false;
             state.isFetching = false;
-            /* state.all_tweets[
-                state.all_tweets.filter(tweet=>tweet._id===action.payload.id)
-            ] */
+            state.tweets[
+                state.tweets.findIndex((item) => item._id === action.payload.id)
+            ] = action.payload.user;
 
         },
         likedTweetFailure: (state) => {

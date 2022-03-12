@@ -2,10 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import Twitter from '@material-ui/icons/Twitter';
 import { NavLink } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { LogoutCalls } from '../redux/apiCalls';
 
-function SignOutAlert({ setUser }) {
+function SignOutAlert() {
+    const dispatch = useDispatch()
     const Logout = () => {
-        setUser('')
+        LogoutCalls(dispatch)
     }
     return (
         <Container>

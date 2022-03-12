@@ -3,9 +3,43 @@ import styled from 'styled-components'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import Twitter from '@material-ui/icons/Twitter';
 import Tooltip from '@material-ui/core/Tooltip';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useHistory } from 'react-router-dom';
+import { useState } from 'react';
+import { axiosInstance } from '../axios'
 
 function Register() {
+    const history = useHistory()
+    const [inputs, setInputs] = useState({
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
+        password_confirm: ''
+    })
+
+    const handleChange = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const SignUp = async (e) => {
+        e.preventDefault();
+        let newUser = {
+            firstname: inputs.firstname,
+            lastname: inputs.lastname,
+            email: inputs.email,
+            password: inputs.password,
+            password_confirm: inputs.password_confirm
+        }
+        try {
+            await axiosInstance.post('/auth/register', newUser)
+            history.push('/login')
+        } catch (err) {
+            console.log(err)
+        }
+    }
     return (
         <Container>
             <RegsiterContainer>
@@ -24,11 +58,12 @@ function Register() {
                 </ModalHeader>
                 <ModalBody>
                     <InputContainer>
-                        <UsernameInput type='text' placeholder='Name' />
-                        <EmailInput type='text' placeholder='Email' />
-                        <PasswordInput type='password' placeholder='Mot de passe' />
-                        <PasswordConfirmInput type='password' placeholder='Confirm mot de passe' />
-                        <LoginBtn>S'inscrire</LoginBtn>
+                        <FirstnameInput type='text' name='firstname' placeholder='First Name' onChange={handleChange} />
+                        <LastnameInput type='text' name='lastname' placeholder='Last Name' onChange={handleChange} />
+                        <EmailInput type='text' name='email' placeholder='Email' onChange={handleChange} />
+                        <PasswordInput type='password' name='password' placeholder='Mot de passe' onChange={handleChange} />
+                        <PasswordConfirmInput type='password' name='password_confirm' placeholder='Confirm mot de passe' onChange={handleChange} />
+                        <LoginBtn onClick={SignUp}>S'inscrire</LoginBtn>
                         <Text><span>Vous avez un compte ? <NavLink to='/login'>Se connecter</NavLink></span></Text>
                     </InputContainer>
 
@@ -101,7 +136,7 @@ justify-content:center;
 flex-direction:column;
 
 `
-const UsernameInput = styled.input`
+const FirstnameInput = styled.input`
 width:100%;
 height:50px;
 margin-bottom:10px;
@@ -117,9 +152,10 @@ border-radius:4px;
     transition: all 0.5s ease;
 }
 `
-const PasswordInput = styled(UsernameInput)``
-const EmailInput = styled(UsernameInput)``
-const PasswordConfirmInput = styled(UsernameInput)``
+const LastnameInput = styled(FirstnameInput)``
+const PasswordInput = styled(FirstnameInput)``
+const EmailInput = styled(FirstnameInput)``
+const PasswordConfirmInput = styled(FirstnameInput)``
 
 const LoginBtn = styled.div`
 width:95%;

@@ -9,99 +9,134 @@ import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTw
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import TweetComments from './TweetComments';
 import CommentModal from './CommentModal';
+import { NavLink, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getCurrentTweet } from '../redux/apiCalls';
+import { useDispatch, useSelector } from 'react-redux';
+import { axiosInstance } from '../axios';
 
 function TweetPost() {
+    const dispatch = useDispatch()
     const [commentModal, setCommentModal] = useState(false)
     const [like, setLike] = useState(false)
+    const [tweet_user_infos, setTweetUserInfos] = useState(null)
+    const location = useLocation();
+    const tweetId = location.pathname.split("/")[2];
+    const tweet = useSelector(state => state.tweet.tweet)
+    useEffect(() => {
+        getCurrentTweet(tweetId, dispatch)
+    }, [tweetId, dispatch])
+
+    useEffect(() => {
+        const getTweetUserInfos = async () => {
+            try {
+                const res = await axiosInstance.get(`/user/${tweet?.userId}/get`);
+                const data = await res.data;
+                setTweetUserInfos(data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getTweetUserInfos()
+    }, [tweet])
     return (
         <Container>
             <TweetContainer>
-                <TweetHeader>
-                    <Infos>
-                        <UserImg>
-                            <img src='/images/my-image.jpg' alt='' />
-                        </UserImg>
-                        <Info>
-                            <Username><a href="#">Youcef Ben Khadem</a></Username>
-                            <Tag>@youcef_khadem</Tag>
-                        </Info>
-                    </Infos>
-                    <Tooltip title="Plus" arrow>
-                        <Icon>
-                            <MoreHorizIcon fontSize='small' />
-                        </Icon>
-                    </Tooltip>
-                </TweetHeader>
-                <TweetBody>
-                    <TweetText>
-                        <HashTag>#OnePiece1041 #ONEPIECE</HashTag>
-                        <Text>
-                            <p>
-                                Mark my words, this is the one and only appropriate chance for blackening Enma.
-                                The shinigami is most definitely Enma, and I’m guessing it will make a contract
-                                with Zoro to kill Kaidou and turn into a black blade to fulfill this purpose.
-                            </p>
-                        </Text>
-                    </TweetText>
-                    <TweetImg>
-                        <img src='/images/my-image.jpg' alt='' />
-                    </TweetImg>
+                {/* tweet */ tweet_user_infos && <>
+                    <TweetHeader>
+                        <Infos>
+                            <NavLink to={`/user/${tweet_user_infos?._id}`}>
+                                <UserImg>
+                                    <img src={tweet_user_infos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                                </UserImg>
+                            </NavLink>
+                            <Info>
+                                <Username><a href="#">{tweet_user_infos?.fullname}</a></Username>
+                                <Tag>@{tweet_user_infos?.fullname.replace(/ /g, '_')}</Tag>
+                            </Info>
+                        </Infos>
+                        <Tooltip title="Plus" arrow>
+                            <Icon>
+                                <MoreHorizIcon fontSize='small' />
+                            </Icon>
+                        </Tooltip>
+                    </TweetHeader>
+                    <TweetBody>
+                        <TweetText>
+                            <HashTag>{tweet?.hashTag}</HashTag>
+                            <Text>
+                                <p>
+                                    {tweet?.content}
+                                </p>
+                            </Text>
+                        </TweetText>
+                        <TweetImg>
+                            <img src={tweet?.tweetImage} alt='' />
+                        </TweetImg>
 
-                </TweetBody>
-                <PostedDate>
-                    <a href="#">5:52 PM · 13 févr. 2022</a>
-                </PostedDate>
+                    </TweetBody>
+                    <PostedDate>
+                        <a href="#">5:52 PM · 13 févr. 2022</a>
+                    </PostedDate>
 
-                <TweetStats>
-                    <StatsContainer>
-                        <Item><a href="#">23 <span>Retweets</span></a></Item>
-                        <Item><a href="#">5 <span>Tweets cités</span></a></Item>
-                        <Item><a href="#">462 <span>J'aime</span></a></Item>
-                    </StatsContainer>
-                </TweetStats>
-                <Bottom>
-                    <IconContainer>
-                        <Ic onClick={() => setCommentModal(true)} color='blue'>
-                            <Tooltip title="Répondre" placement="bottom" arrow>
-                                <ChatBubbleOutlineTwoToneIcon fontSize='small' />
-                            </Tooltip>
+                    <TweetStats>
+                        <StatsContainer>
+                            <Item><a href="#">23 <span>Retweets</span></a></Item>
+                            <Item><a href="#">5 <span>Tweets cités</span></a></Item>
+                            <Item><a href="#">462 <span>J'aime</span></a></Item>
+                        </StatsContainer>
+                    </TweetStats>
+                    <Bottom>
+                        <IconContainer>
+                            <Ic onClick={() => setCommentModal(true)} color='blue'>
+                                <Tooltip title="Répondre" placement="bottom" arrow>
+                                    <ChatBubbleOutlineTwoToneIcon fontSize='small' />
+                                </Tooltip>
 
-                        </Ic>
-                        <Ic color='green'>
-                            <Tooltip title="Retweeter" placement="bottom" arrow>
-                                <CachedTwoToneIcon fontSize='small' />
-
-                            </Tooltip>
-
-                        </Ic>
-                        {!like ?
-                            <Ic color='rose' onClick={() => setLike(!like)}>
-                                <Tooltip title="Aimer" placement="bottom" arrow>
-                                    <FavoriteBorderIcon fontSize='small' />
+                            </Ic>
+                            <Ic color='green'>
+                                <Tooltip title="Retweeter" placement="bottom" arrow>
+                                    <CachedTwoToneIcon fontSize='small' />
 
                                 </Tooltip>
 
                             </Ic>
-                            :
-                            <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
-                                <Tooltip title="Aimer" placement="bottom" arrow>
-                                    <FavoriteRoundedIcon fontSize='small' />
-                                </Tooltip>
+                            {!like ?
+                                <Ic color='rose' onClick={() => setLike(!like)}>
+                                    <Tooltip title="Aimer" placement="bottom" arrow>
+                                        <FavoriteBorderIcon fontSize='small' />
 
+                                    </Tooltip>
+
+                                </Ic>
+                                :
+                                <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
+                                    <Tooltip title="Aimer" placement="bottom" arrow>
+                                        <FavoriteRoundedIcon fontSize='small' />
+                                    </Tooltip>
+
+                                </Ic>
+                            }
+                            <Ic color='blue'>
+                                <Tooltip title="Partager" placement="bottom" arrow>
+                                    <ShareOutlinedIcon fontSize='small' />
+                                </Tooltip>
                             </Ic>
-                        }
-                        <Ic color='blue'>
-                            <Tooltip title="Partager" placement="bottom" arrow>
-                                <ShareOutlinedIcon fontSize='small' />
-                            </Tooltip>
-                        </Ic>
-                    </IconContainer>
-                </Bottom>
+                        </IconContainer>
+                    </Bottom>
+                </>}
             </TweetContainer>
-            <TweetComments setCommentModal={setCommentModal} commentModal={commentModal} />
+            <TweetComments
+                setCommentModal={setCommentModal}
+                tweetId={tweetId}
+                tweet_user_infos={tweet_user_infos}
+            />
             {
                 commentModal &&
-                <CommentModal commentModal={commentModal} setCommentModal={setCommentModal} />
+                <CommentModal
+                    tweet={tweet}
+                    tweet_user_infos={tweet_user_infos}
+                    setCommentModal={setCommentModal} />
             }
         </Container>
     )

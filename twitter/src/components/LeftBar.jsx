@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import TwitterIcon from '@material-ui/icons/Twitter';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import SearchIcon from '@material-ui/icons/Search';
 import NotificationsNoneIcon from '@material-ui/icons/NotificationsNone';
@@ -10,30 +9,39 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import Twitter from '@material-ui/icons/Twitter';
-import { Link, NavLink } from 'react-router-dom'
-import Tooltip from '@material-ui/core/Tooltip';
-const LeftBar = () => {
-    const [modal, setModal] = useState(false)
-    const handleTooltipClose = () => {
-        setModal(false);
-    };
+import { NavLink } from 'react-router-dom'
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { getCurrentUser } from '../redux/apiCalls';
+import { useDispatch } from 'react-redux';
 
+const LeftBar = () => {
+    const user = useSelector(state => state.user.current_user)
+    const [modal, setModal] = useState(false)
+    const dispatch = useDispatch()
     const handleTooltipOpen = () => {
         setModal(true);
     };
     const CloseToolTip = () => {
         window.addEventListener('mouseup', (e) => {
-            const ele = document.getElementById('my-tooltip')
+            const ele = document.getElementById('my-tooltip');
             if (!ele?.contains(e.target)) {
                 setModal(false)
             } else {
                 setModal(true)
             }
-        })
+
+        });
+
     }
+
+    useEffect(() => {
+        getCurrentUser(user?._id, dispatch)
+    }, [user?._id, dispatch])
+
     return (
         <Container onClick={CloseToolTip}>
-            <MenuItems>
+            <MenuItems >
                 <Ite>
                     <NavLink to='/'>
                         <Ic>
@@ -84,7 +92,7 @@ const LeftBar = () => {
                     </NavLink>
                 </Item>
                 <Item>
-                    <NavLink to='/profile'>
+                    <NavLink to={`/user/${user?._id}`}>
                         <Icon >
                             <PersonOutlineIcon fontSize='large' />
                         </Icon>
@@ -104,11 +112,11 @@ const LeftBar = () => {
                 </BtnContainer>
                 <Bottom>
                     <UserImg>
-                        <img src='/images/my-image.jpg' alt='' />
+                        <img src={user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
                     </UserImg>
                     <Info>
-                        <Username>Youcef Ben Khadem</Username>
-                        <Tag>@youcef_khadem</Tag>
+                        <Username>{user?.fullname}</Username>
+                        <Tag>@{user?.fullname.replace(/ /g, '_')}</Tag>
                     </Info>
 
 
@@ -119,15 +127,15 @@ const LeftBar = () => {
 
                 </Bottom>
                 {modal &&
-                    <ModalContainer id='my-tooltip'>
+                    <ModalContainer id='my-tooltip'  >
                         <Modal>
                             <Top>
                                 <UserImg style={{ display: 'flex', alignItems: 'center' }}>
-                                    <img src='/images/my-image.jpg' alt='' />
+                                    <img src={user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
                                 </UserImg>
                                 <Info>
-                                    <Username>Youcef Ben Khadem</Username>
-                                    <Tag>@youcef_khadem</Tag>
+                                    <Username>{user?.fullname}</Username>
+                                    <Tag>@{user?.fullname.replace(/ /g, '_')}</Tag>
                                 </Info>
                             </Top>
 
@@ -147,7 +155,7 @@ const LeftBar = () => {
 
 export default LeftBar
 const Container = styled.div`
-flex:1;
+width:25%;
 height:100vh;
 display:flex;
 align-items:flex-start;
@@ -157,25 +165,28 @@ left:0;
 top:0;
 bottom:0;
 `
-const MenuItems = styled.div``
-const Item = styled.div`
-a{
-    color:white;
-    text-decoration:none;
+const MenuItems = styled.div`
 
+`
+const Item = styled.div`
+
+a{
+color:white;
+text-decoration:none;
 display:flex;
 cursor:pointer;
 align-items:center;
 margin:10px 0px;
 padding:5px 15px;
+
 span{
-    font-size:20px;
+    font-size:22px;
     font-weight:600;
 };
-&:hover{
+ &:hover{
     background-color:#2a4055;
     border-radius:30px;
-}
+} 
 }
 `
 const Ite = styled(Item)`

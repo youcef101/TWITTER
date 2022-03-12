@@ -2,7 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tooltip from '@material-ui/core/Tooltip';
-function ProfileNav() {
+
+function ProfileNav({ profileInfos }) {
+
     return (
         <Container>
 
@@ -12,7 +14,7 @@ function ProfileNav() {
                 </Tooltip>
             </Icon>
             <Info>
-                <Username>Youcef Ben Khadem</Username>
+                <Username>{profileInfos?.fullname}</Username>
                 <Tweet>150 tweet</Tweet>
             </Info>
 

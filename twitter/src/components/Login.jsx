@@ -4,9 +4,16 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import Twitter from '@material-ui/icons/Twitter';
 import Tooltip from '@material-ui/core/Tooltip';
 import { NavLink } from 'react-router-dom';
-function Login({ setUser }) {
+import { useDispatch, useSelector } from 'react-redux';
+import { LoginCalls } from '../redux/apiCalls';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
+function Login() {
+    const dispatch = useDispatch()
+    const { isFetching } = useSelector(state => state?.user)
+
     const [inputs, setInputs] = useState({
-        username: '',
+        email: '',
         password: ''
     })
     const handleInput = (e) => {
@@ -17,8 +24,17 @@ function Login({ setUser }) {
     }
     const Login = (e) => {
         e.preventDefault();
-        setUser(inputs.username)
+        const user = {
+            email: inputs.email,
+            password: inputs.password
+        }
+        LoginCalls(dispatch, user);
+
     }
+
+
+    console.log(isFetching)
+
     return (
         <Container>
             <LoginContainer>
@@ -37,10 +53,15 @@ function Login({ setUser }) {
                 </ModalHeader>
                 <ModalBody>
                     <InputContainer>
-                        <UsernameInput type='text' placeholder='Name' name='username' onChange={handleInput} />
+                        <UsernameInput type='text' placeholder='Email' name='email' onChange={handleInput} />
                         <PasswordInput type='password' placeholder='Mot de passe' name='password' onChange={handleInput} />
                         <Lien><a href="#">Mot de passe oublié ?</a></Lien>
-                        <LoginBtn onClick={Login}>Se connecter</LoginBtn>
+                        <LoginBtn onClick={Login} /* disabled={isFetching} */>
+                            {/*   {isFetching ? <>
+                                <CircularProgress />
+                            </> : <> */} Se connecter{/* </>} */}
+
+                        </LoginBtn>
                         <Text><span>Vous n'avez pas de compte ? <NavLink to="/register">Inscrivez-vous</NavLink></span></Text>
                     </InputContainer>
 
@@ -145,7 +166,7 @@ a{
     }
 }
 `
-const LoginBtn = styled.div`
+const LoginBtn = styled.button`
 width:95%;
 margin-top:80px;
 cursor:pointer;
@@ -155,11 +176,16 @@ font-weight:700;
 border-radius:30px;
 padding:10px 10px;
 display:flex;
+border:none;
 align-items:center;
 justify-content:center;
 &:hover{
     background-color:#f2f2f2;
-}
+};
+// &:disabled {
+//     color: red;
+//     cursor: not-allowed;
+//   }
 `
 const Text = styled.div`
 display:flex;

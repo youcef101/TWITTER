@@ -7,32 +7,62 @@ import ShareOutlinedIcon from '@material-ui/icons/ShareOutlined';
 import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTwoTone';
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { axiosInstance } from '../axios';
+import { format } from 'timeago.js'
 
-function Comment({ setCommentModal, commentModal }) {
+function Comment({ setCommentModal, comment, tweet_user_infos }) {
     const [like, setLike] = useState(false)
+    const [comment_user_infos, setCommentUserInfos] = useState(null)
+
+    useEffect(() => {
+        const getCommentUserInfos = async () => {
+            try {
+                const res = await axiosInstance.get(`/user/${comment?.userId}/get`);
+                const data = await res.data;
+                setCommentUserInfos(data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getCommentUserInfos();
+        /* to fix this error ====>Can't perform a React state update on an unmounted component.
+         This is a no-op, but it indicates a memory leak in your application.
+        To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.*/
+        return () => {
+            setCommentUserInfos(null);
+        };
+        /********************************************************* */
+    }, [comment])
+
     return (
         <Container>
 
             <CommentContainer>
                 <TopPost>
                     <UserImage>
-                        <img src='/images/my-image.jpg' alt='' />
+                        <img src={comment_user_infos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
                     </UserImage>
                     <UserInfo>
                         <Up>
-                            <Username><a href='#'>Youcef Ben Khadem</a></Username>
-                            <Tag>youcef_khadem.</Tag>
-                            <PostedDate>13h</PostedDate>
+                            <Username><a href='#'>{comment_user_infos?.fullname}</a></Username>
+                            <Tag>@{comment_user_infos?.fullname.replace(/ /g, '_')}.</Tag>
+                            <PostedDate>{format(comment?.createdAt)}</PostedDate>
                         </Up>
                         <Down>
-                            En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@Youcef_khadem</span>
+                            En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</span>
                         </Down>
                     </UserInfo>
                 </TopPost>
                 <Link to='/tweet'>
                     <Content >
-                        hello guys how are u ?
+                        {comment?.content}
                     </Content>
+                    {comment?.commentImage &&
+                        <div>
+                            <img src={comment?.commentImage} alt='' style={{ height: '200px' }} />
+                        </div>
+                    }
                 </Link>
                 <Bottom>
                     <IconContainer>

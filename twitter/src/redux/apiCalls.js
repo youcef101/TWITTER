@@ -17,7 +17,13 @@ import {
     deleteTweetSuccess,
     updateTweetFailure,
     updateTweetStart,
-    updateTweetSuccess
+    updateTweetSuccess,
+    getCurrentTweetFailure,
+    getCurrentTweetStart,
+    getCurrentTweetSuccess,
+    likedTweetFailure,
+    likedTweetStart,
+    likedTweetSuccess,
 } from './tweetSlice'
 import {
     addCommentFailure,
@@ -43,7 +49,6 @@ import {
     logoutFailure,
     logoutStart,
     logoutSuccess,
-    loginFailure,
     editUserFailure,
     editUserStart,
     editUserSuccess,
@@ -61,7 +66,16 @@ import {
     getUserSuggestionsSuccess,
     getAllUsersFailure,
     getAllUsersStart,
-    getAllUsersSuccess
+    getAllUsersSuccess,
+    editUserPhotoFailure,
+    editUserPhotoStart,
+    editUserPhotoSuccess,
+    editUserCoverFailure,
+    editUserCoverStart,
+    editUserCoverSuccess,
+    getCurrentUserFailure,
+    getCurrentUserStart,
+    getCurrentUserSuccess
 } from './userSlice'
 
 //add tweet
@@ -135,6 +149,31 @@ export const getHomeTweets = async (id, dispatch) => {
         dispatch(getHomeTweetsFailure())
     }
 }
+
+//get current Tweet
+export const getCurrentTweet = async (id, dispatch) => {
+    dispatch(getCurrentTweetStart());
+    try {
+        const res = await axiosInstance.get(`/tweet/${id}/get`);
+        const data = await res.data
+        dispatch(getCurrentTweetSuccess(data))
+    } catch (err) {
+        dispatch(getCurrentTweetFailure())
+    }
+}
+
+//liked tweet
+export const likedTweet = async (id, user, dispatch) => {
+    dispatch(likedTweetStart());
+    try {
+        const res = await axiosInstance.put(`/tweet/${id}/like`, user);
+        const data = await res.data
+        dispatch(likedTweetSuccess(data));
+    } catch (err) {
+        dispatch(likedTweetFailure())
+    }
+}
+
 //add comment
 export const addComment = async (comment, dispatch) => {
     dispatch(addCommentStart());
@@ -191,5 +230,100 @@ export const getTweetComments = async (id, dispatch) => {
         dispatch(getTweetCommentsSuccess(data))
     } catch (err) {
         dispatch(getTweetCommentsFailure())
+    }
+}
+
+//login
+export const LoginCalls = async (dispatch, user) => {
+    dispatch(loginStart());
+    try {
+        const res = await axiosInstance.post('/auth/login', user);
+        const data = await res.data;
+        dispatch(loginSuccess(data))
+    } catch (err) {
+        dispatch(loginFailure())
+    }
+}
+
+//logout
+export const LogoutCalls = async (dispatch) => {
+    dispatch(loginStart())
+    try {
+        dispatch(loginSuccess())
+    } catch (err) {
+        dispatch(loginFailure())
+    }
+}
+
+//edit user infos
+export const EditUser = async (id, user, dispatch) => {
+    dispatch(editUserStart())
+    try {
+        const res = await axiosInstance.put(`/user/${id}/edit`, user);
+        const data = await res.data;
+        dispatch(editUserSuccess(data))
+    } catch (err) {
+        dispatch(editUserFailure())
+    }
+}
+
+//edit user profile photo
+export const EditUserProfilePhoto = async (id, user, dispatch) => {
+    dispatch(editUserPhotoStart())
+    try {
+        const res = await axiosInstance.put(`/user/${id}/edit/profile/photo`, user);
+        const data = await res.data;
+        dispatch(editUserPhotoSuccess(data))
+    } catch (err) {
+        dispatch(editUserPhotoFailure())
+    }
+}
+
+//edit user profile cover
+export const EditUserProfileCover = async (id, user, dispatch) => {
+    dispatch(editUserCoverStart())
+    try {
+        const res = await axiosInstance.put(`/user/${id}/edit/profile/cover`, user);
+        const data = await res.data;
+        dispatch(editUserCoverSuccess(data))
+    } catch (err) {
+        dispatch(editUserCoverFailure())
+    }
+}
+
+//edit user suggestions
+export const getUserSuggestions = async (id, dispatch) => {
+    dispatch(getUserSuggestionsStart())
+    try {
+
+        const res = await axiosInstance.get(`/user/${id}/notFollow`);
+        const data = await res.data;
+        dispatch(getUserSuggestionsSuccess(data))
+    } catch (err) {
+        dispatch(getUserSuggestionsFailure())
+    }
+}
+
+//get Current User
+export const getCurrentUser = async (id, dispatch) => {
+    dispatch(getCurrentUserStart());
+    try {
+        const res = await axiosInstance.get(`/user/${id}/get`);
+        const data = await res.data;
+        dispatch(getCurrentUserSuccess(data))
+    } catch (err) {
+        dispatch(getCurrentUserFailure())
+    }
+}
+
+//get all users
+export const getAllUsers = async (dispatch) => {
+    dispatch(getAllUsersStart());
+    try {
+        const res = await axiosInstance.get('/user/get/all');
+        const data = await res.data;
+        dispatch(getAllUsersSuccess(data));
+    } catch (err) {
+        dispatch(getAllUsersFailure())
     }
 }

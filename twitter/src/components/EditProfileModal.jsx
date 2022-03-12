@@ -1,9 +1,156 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import app from '../firebase'
 import Tooltip from '@material-ui/core/Tooltip';
-function EditProfileModal({ setEditModal }) {
+import { useDispatch } from 'react-redux';
+import { EditUserProfileCover, EditUserProfilePhoto, EditUser, getCurrentUser } from '../redux/apiCalls';
+import { useSelector } from 'react-redux';
+
+
+
+
+function EditProfileModal({ setEditModal, profileInfos, userId, setIsEdit, isEdit }) {
+
+
+    const dispatch = useDispatch()
+    const [couv_file, setCouvFile] = useState(null)
+    const [profile_file, setProfileFile] = useState(null)
+    const user = useSelector(state => state.user.current_user)
+
+
+    const [inputs, setInputs] = useState({
+        profileCover: profileInfos?.profileCover,
+        profileImage: profileInfos?.profileImage,
+        firstname: profileInfos?.firstname,
+        lastname: profileInfos?.lastname,
+        bio: profileInfos?.bio,
+        site: profileInfos?.site,
+        country: profileInfos?.country,
+    })
+
+    const handleChange = (e) => {
+        setInputs({
+            ...inputs,
+            [e.target.name]: e.target.value
+        })
+    }
+    const handleCouvFile = (e) => {
+        setCouvFile(e.target.files[0])
+    }
+    const handleProfileFile = (e) => {
+        setProfileFile(e.target.files[0])
+    }
+
+    useEffect(() => {
+        getCurrentUser(user?._id, dispatch)
+
+    }, [isEdit, dispatch, user?._id])
+
+
+
+    const editProfileInfos = async (e) => {
+        setIsEdit(false)
+        e.preventDefault();
+        const edited_user = {
+            userId: profileInfos?._id,
+            firstname: inputs?.firstname,
+            lastname: inputs?.lastname,
+            bio: inputs?.bio,
+            site: inputs?.site,
+            country: inputs?.country,
+        }
+        await EditUser(userId, edited_user, dispatch)
+        setIsEdit(true)
+        setEditModal(false)
+    }
+
+
+
+    const editProfileCover = async (e) => {
+        setIsEdit(false)
+        e.preventDefault();
+        const couv_fileName = new Date().getTime() + couv_file?.name;
+        const storage = getStorage(app);
+        const couv_storageRef = ref(storage, couv_fileName);
+        const uploadTask_couv = uploadBytesResumable(couv_storageRef, couv_file);
+        uploadTask_couv.on('state_changed',
+            (snapshot) => {
+
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                    default:
+                }
+            },
+            (error) => { },
+            () => {
+                getDownloadURL(uploadTask_couv.snapshot.ref).then((downloadURL) => {
+                    const user_cover = {
+                        userId: userId,
+                        profileCover: downloadURL
+                    }
+                    EditUserProfileCover(userId, user_cover, dispatch);
+                    setIsEdit(true)
+                    setCouvFile(null)
+
+
+                });
+            }
+        );
+    }
+
+
+
+    const editProfilePhoto = async (e) => {
+        setIsEdit(false)
+        e.preventDefault();
+        const profile_fileName = new Date().getTime() + profile_file?.name;
+        const storage = getStorage(app);
+        const profile_storageRef = ref(storage, profile_fileName);
+        const uploadTask_profile = uploadBytesResumable(profile_storageRef, profile_file);
+        uploadTask_profile.on('state_changed',
+            (snapshot) => {
+
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                    default:
+                }
+            },
+            (error) => { },
+            () => {
+                getDownloadURL(uploadTask_profile.snapshot.ref).then((downloadURL) => {
+                    const user_photo = {
+                        userId: user?._id,
+                        profileImage: downloadURL
+                    }
+                    EditUserProfilePhoto(userId, user_photo, dispatch);
+                    setIsEdit(true)
+                    setProfileFile(null)
+
+                });
+            }
+        );
+    }
+
+
+
     return (
         <Container>
             <ModalContainer>
@@ -19,45 +166,86 @@ function EditProfileModal({ setEditModal }) {
                         </Info>
                     </Left>
                     <Right>
-                        <SaveBtn>
+                        <SaveBtn onClick={editProfileInfos}>
                             Enregistrer
                         </SaveBtn>
                     </Right>
                 </ModalHeader>
                 <ModalBody>
                     <ProfileCover>
-                        <img src='https://pbs.twimg.com/profile_banners/1349348807348285443/1611583366/600x200' alt='' />
+                        {
+                            couv_file ?
+                                <img src={URL.createObjectURL(couv_file)} alt='' />
+                                : <img src={profileInfos?.profileCover || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV4G-hTwlMWrgdt0tsiMSpc1delPncu1U1Hw&usqp=CAU"} alt='' />
+                        }
+
                     </ProfileCover>
                     <ProfileCoverUp>
                         <IconContainer>
-                            <Ic>
-                                <Tooltip title="Ajouter une photo" arrow>
-                                    <CameraAltOutlinedIcon fontSize='medium' />
-                                </Tooltip>
-                            </Ic>
-                            <Ic>
-                                <Tooltip title="Supprimer la photo" arrow>
-                                    <CloseOutlinedIcon fontSize='medium' />
-                                </Tooltip>
-                            </Ic>
+                            {(!profileInfos?.profileCover && !couv_file) || (profileInfos?.profileCover && !couv_file) ?
+                                <UploadContainer>
+                                    <LabelFile htmlFor='file1'>
+                                        <Ic>
+                                            <Tooltip title="Ajouter une photo" arrow>
+                                                <CameraAltOutlinedIcon fontSize='medium' />
+                                            </Tooltip>
+                                        </Ic>
+                                    </LabelFile>
+                                    <input type='file' id='file1' name='file1' style={{ display: 'none' }} onChange={handleCouvFile} />
+                                </UploadContainer>
+                                : <>
+                                    <Ic onClick={editProfileCover}>
+                                        <Tooltip title="Modifier la photo du couverture" arrow>
+                                            <EditOutlinedIcon fontSize='medium' />
+                                        </Tooltip>
+                                    </Ic>
+
+                                </>}
                         </IconContainer>
                     </ProfileCoverUp>
                     <ProfileImg>
-                        <img src='/images/my-image.jpg' alt='' />
-                        <IconContain>
-                            <CameraIc>
-                                <Tooltip title="Supprimer la photo" arrow>
-                                    <CameraAltOutlinedIcon fontSize='medium' />
-                                </Tooltip>
-                            </CameraIc>
+                        {profile_file ?
+                            <img src={URL.createObjectURL(profile_file)} alt='' />
+                            : <img src={profileInfos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                        }
+                        <IconContain style={{ marginLeft: '33px' }}>
+
+
+                            {(!profileInfos?.profileImage && !profile_file) || (profileInfos?.profileImage && !profile_file) ?
+                                <UploadContainer>
+                                    <LabelFile htmlFor='file2'>
+                                        <CameraIc>
+                                            <Tooltip title="Ajouter un photo du profile" arrow>
+                                                <CameraAltOutlinedIcon fontSize='medium' />
+                                            </Tooltip>
+                                        </CameraIc>
+                                    </LabelFile>
+                                    <input type='file' id='file2' name='file2' style={{ display: 'none' }} onChange={handleProfileFile} />
+                                </UploadContainer>
+
+
+                                :
+
+
+                                <CameraIc onClick={editProfilePhoto}>
+                                    <Tooltip title="Modifier la photo" arrow>
+                                        <EditOutlinedIcon fontSize='medium' />
+                                    </Tooltip>
+                                </CameraIc>
+
+                            }
+
+
                         </IconContain>
+
                     </ProfileImg>
                     <InputContainer>
                         <Inputs>
-                            <NameInput type='text' placeholder='Nom' />
-                            <BioInput type='text' placeholder='Bio' />
-                            <LocalInput type='text' placeholder='Localisation' />
-                            <SiteInput type='text' placeholder='Site Web' />
+                            <NameInput type='text' placeholder='First Name' name='firstname' defaultValue={profileInfos?.firstname} onChange={handleChange} />
+                            <LastnameInput type='text' placeholder='Last Name' name='lastname' defaultValue={profileInfos?.lastname} onChange={handleChange} />
+                            <BioInput type='text' placeholder='Bio' name='bio' defaultValue={profileInfos?.bio} onChange={handleChange} />
+                            <LocalInput type='text' placeholder='Localisation' name='country' defaultValue={profileInfos?.country} onChange={handleChange} />
+                            <SiteInput type='text' placeholder='Site Web' name='site' defaultValue={profileInfos?.site} onChange={handleChange} />
                         </Inputs>
                     </InputContainer>
                 </ModalBody>
@@ -123,7 +311,6 @@ const Icon = styled.div`
 display:flex;
 align-items:center;
 justify-content:center;
-//margin:0px 10px;
 cursor:pointer;
 width:35px;
 height:35px;
@@ -169,6 +356,7 @@ img{
     height:120px;
     border-radius:50%;
     border:4px solid rgba(21,32,43,1.00);
+    background-color:rgba(21,32,43,1.00);
 }
 
 `
@@ -234,6 +422,7 @@ color:white;
 };
 
 `
+const LastnameInput = styled(NameInput)``
 const BioInput = styled.textarea`
 margin-bottom:20px;
 resize:none;
@@ -255,3 +444,14 @@ const LocalInput = styled(NameInput)``
 const SiteInput = styled(NameInput)`
 margin-bottom:5px;
 `
+const DefaultCouv = styled.div`
+width:600px;
+height:200px;
+background-color:#e6e6e6;
+display:flex;
+align-items:center;
+justify-content:center;
+`
+
+const UploadContainer = styled.div``
+const LabelFile = styled.label``

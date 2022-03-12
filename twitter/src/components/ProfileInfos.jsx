@@ -4,62 +4,157 @@ import RoomOutlinedIcon from '@material-ui/icons/RoomOutlined';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
 import EditProfileModal from './EditProfileModal';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { getCurrentUser } from '../redux/apiCalls';
+import { axiosInstance } from '../axios';
 
-function ProfileInfos() {
+
+function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, setIsUnfollow, isFollow, isUnfollow */ }) {
     const [editModal, setEditModal] = useState(false)
+    const [isFollow, setIsFollow] = useState(false)
+    const [isUnfollow, setIsUnfollow] = useState(false)
+    const [isEdit, setIsEdit] = useState(false)
+    const user = useSelector(state => state.user.current_user)
+    const dispatch = useDispatch()
+    const months = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+    ];
+
+    useEffect(() => {
+        const getProfileInfos = async (e) => {
+
+            try {
+                const res = await axiosInstance.get(`/user/${userId}/get`);
+                const data = await res.data;
+                setProfileInfos(data)
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getProfileInfos();
+        return () => {
+            setProfileInfos(null)
+        }
+    }, [userId, isEdit, isFollow, isUnfollow])
+
+    const UnfollowUser = async (id) => {
+        const userId = {
+            userId: user?._id
+        }
+        try {
+            await axiosInstance.put(`/user/${id}/unfollow`, userId);
+            setIsUnfollow(!isUnfollow)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const FollowUser = async (id) => {
+        const userId = {
+            userId: user?._id
+        }
+        try {
+            await axiosInstance.put(`/user/${id}/follow`, userId);
+            setIsFollow(!isFollow)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser(user?._id, dispatch)
+    }, [isFollow, isUnfollow])
+
     return (
         <Container>
-            <ProfileCover>
-                <img src='https://pbs.twimg.com/profile_banners/1349348807348285443/1611583366/600x200' alt='' />
-            </ProfileCover>
-            <Infos>
-                <ProfileImg>
-                    <img src='/images/my-image.jpg' alt='' />
-                </ProfileImg>
-                <EditBtn onClick={() => setEditModal(true)}>
-                    Editer le profil
-                </EditBtn>
+            {profileInfos && <>
+                <ProfileCover>
+                    <img src={profileInfos?.profileCover || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV4G-hTwlMWrgdt0tsiMSpc1delPncu1U1Hw&usqp=CAU"} alt='' />
+                </ProfileCover>
+                <Infos>
+                    <ProfileImg >
+                        <img style={{ position: 'relative' }} src={profileInfos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
 
-            </Infos>
-            <ProfileInfo>
-                <Top>
-                    <Username>Youcef Ben Khadem</Username>
-                    <Tag>@youcef_khadem</Tag>
-                </Top>
-                <Middle>
-                    <Item>
-                        <Icon>
-                            <RoomOutlinedIcon fontSize='small' />
-                        </Icon>
-                        <span>Tunisie</span>
-                    </Item>
-                    <Item>
-                        <Icon style={{ marginTop: '-4px' }}>
-                            <CakeOutlinedIcon fontSize='small' />
-                        </Icon>
-                        <span>Naissance le 1 avril 1998</span>
-                    </Item>
-                    <Item>
-                        <Icon>
-                            <DateRangeOutlinedIcon fontSize='small' />
-                        </Icon>
-                        <span>A rejoint Twitter en janvier 2021</span>
-                    </Item>
+                    </ProfileImg>
+                    {user?._id === userId ?
+                        <EditBtn onClick={() => setEditModal(true)}>
+                            Editer le profil
+                        </EditBtn>
+                        : <>
+                            {!user?.followings.includes(profileInfos?._id) ?
+                                <BtnContainer onClick={() => FollowUser(profileInfos?._id)}>Suivre</BtnContainer>
+                                :
+                                <BtnContainer onClick={() => UnfollowUser(profileInfos?._id)}>ne suivre pas</BtnContainer>
+                            }
+                        </>}
+                </Infos>
+                <ProfileInfo>
+                    <Top>
+                        <Username>{profileInfos?.fullname}</Username>
+                        <Tag>@{profileInfos?.fullname.replace(/ /g, '_')}</Tag>
+                    </Top>
+                    <BioContainer>
+                        <Bio>
+                            {profileInfos?.bio}
 
-                </Middle>
-                <Bottom>
-                    <Field>
-                        <a href="#">5 <span>abonnements</span></a>
-                    </Field>
-                    <Field>
-                        <a href="#">3 <span>abonné</span></a>
+                        </Bio>
+                        <Site><a href='#'>{profileInfos?.site}</a></Site>
+                    </BioContainer>
+                    <Middle>
+                        <Item>
+                            <Icon>
+                                <RoomOutlinedIcon fontSize='small' />
+                            </Icon>
+                            <span>{profileInfos?.country || 'XXXXXXXX'}</span>
+                        </Item>
+                        <Item>
+                            <Icon style={{ marginTop: '-4px' }}>
+                                <CakeOutlinedIcon fontSize='small' />
+                            </Icon>
+                            <span>{profileInfos?.dateNaissance || 'XXXXXXXX'}{/* Naissance le 1 avril 1998 */}</span>
+                        </Item>
+                        <Item>
+                            <Icon>
+                                <DateRangeOutlinedIcon fontSize='small' />
+                            </Icon>
+                            <span>A rejoint Twitter en {months[new Date(profileInfos?.createdAt).getMonth()] + ' ' + new Date(profileInfos?.createdAt).getFullYear()}</span>
+                        </Item>
 
-                    </Field>
-                </Bottom>
-            </ProfileInfo>
+                    </Middle>
+                    <Bottom>
+                        <Field>
+                            <a href="#">{profileInfos?.followings.length || 0}<span>abonnements</span></a>
+                        </Field>
+                        <Field>
+                            <a href="#">{profileInfos?.followers.length || 0}<span>abonné</span></a>
+
+                        </Field>
+                    </Bottom>
+                </ProfileInfo>
+            </>}
             {editModal &&
-                <EditProfileModal setEditModal={setEditModal} />
+                <EditProfileModal
+                    setIsEdit={setIsEdit}
+                    isEdit={isEdit}
+                    profileInfos={profileInfos}
+                    setEditModal={setEditModal}
+                    userId={userId}
+                />
             }
+
         </Container>
     )
 }
@@ -153,4 +248,62 @@ a{
 const Icon = styled.div`
 display:flex;
 align-items:center;
+`
+const DefaultCouv = styled.div`
+width:600px;
+height:200px;
+background-color:#e6e6e6;
+display:flex;
+align-items:center;
+justify-content:center;
+`
+const Ic = styled.div`
+cursor:pointer;
+width:50px;
+height:50px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+background-color:rgba(21,32,43, 0.5);
+&:hover{
+   background-color:rgba(21,32,43, 0.3) 
+}
+`
+const UploadContainer = styled.div``
+const LabelFile = styled.label``
+const BioContainer = styled.div`
+width:100%;
+`
+const Bio = styled.div`
+max-width:85%;
+`
+const Site = styled.div`
+margin:10px 0px;
+a{
+    color:rgb(29, 155, 240);
+    text-decoration:none;
+    font-size:17px;
+    font-weight:600;
+    &:hover{
+        text-decoration:underline;
+    }
+}
+`
+const BtnContainer = styled.div`
+cursor:pointer;
+background-color:white; 
+border-radius:30px;
+padding:0px 20px;
+height:35px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+color:black;
+&:hover{
+    background-color:antiquewhite;  
+}
+
+
 `

@@ -13,14 +13,25 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import app from '../firebase'
 import { addTweet } from '../redux/apiCalls';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink } from 'react-router-dom';
+
+
+
 
 function AddTweet() {
+
+    const user = useSelector(state => state.user.current_user)
+
     const [tweet, setTweet] = useState([])
     const [file, setFile] = useState(null)
     const dispatch = useDispatch()
     const [chosenEmoji, setChosenEmoji] = useState(null);
+    const [hashtag, setHashTag] = useState(false)
+    const [tag, setTag] = useState(null)
+
     const [anchorEl, setAnchorEl] = useState(null);
+
     const onEmojiClick = (event, emojiObject) => {
         setChosenEmoji(emojiObject.emoji);
         setTweet(prev => [...prev, emojiObject.emoji])
@@ -43,52 +54,72 @@ function AddTweet() {
     const handleFile = (e) => {
         setFile(e.target.files[0])
     }
+    const handleTag = (e) => {
+        setTag(e.target.value)
+    }
+
+
+
 
     const add_tweet = (e) => {
         e.preventDefault();
-        const fileName = new Date().getTime() + file.name;
-        const storage = getStorage(app);
-        const storageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        // Register three observers:
-        // 1. 'state_changed' observer, called any time the state changes
-        // 2. Error observer, called on failure
-        // 3. Completion observer, called on successful completion
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                // Observe state change events such as progress, pause, and resume
-                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case 'paused':
-                        console.log('Upload is paused');
-                        break;
-                    case 'running':
-                        console.log('Upload is running');
-                        break;
-                    default:
-                }
-            },
-            (error) => {
-                // Handle unsuccessful uploads
-            },
-            () => {
-                // Handle successful uploads on complete
-                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    const newTweet = {
-                        content: tweet.join(''),
-                        tweetImage: downloadURL
+        if (file) {
+            const fileName = new Date().getTime() + file.name;
+            const storage = getStorage(app);
+            const storageRef = ref(storage, fileName);
+            const uploadTask = uploadBytesResumable(storageRef, file);
+
+            uploadTask.on('state_changed',
+                (snapshot) => {
+
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                    switch (snapshot.state) {
+                        case 'paused':
+                            console.log('Upload is paused');
+                            break;
+                        case 'running':
+                            console.log('Upload is running');
+                            break;
+                        default:
                     }
-                    addTweet(newTweet, dispatch);
-                    setTweet([])
-                    setFile(null)
-                });
+                },
+                (error) => { },
+                () => {
+
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        const newTweet = {
+                            userId: user?._id,
+                            content: tweet.join(''),
+                            hashTag: tag,
+                            tweetImage: downloadURL
+                        }
+                        addTweet(newTweet, dispatch);
+                        setTweet([])
+                        setHashTag(false)
+                        setFile(null)
+
+                    });
+                }
+            );
+        } else {
+
+            const newTweet = {
+                userId: user?._id,
+                content: tweet.join(''),
+                hashTag: tag,
+
             }
-        );
+            addTweet(newTweet, dispatch);
+
+            setTweet([]);
+            setHashTag(false)
+
+        }
+
 
     }
+
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
@@ -96,12 +127,15 @@ function AddTweet() {
         <Container>
             <AddContainer>
                 <Top>
-                    <UserImg>
-                        <img src='/images/my-image.jpg' alt='' />
-                    </UserImg>
+                    <NavLink to={`/user/${user?._id}`}>
+                        <UserImg>
+                            <img src={user?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                        </UserImg>
+                    </NavLink>
                     <Input>
                         <InputContainer>
                             <TextInput type='text' name='tweet' placeholder='Quoi de neuf ?' value={tweet.join('')} onChange={handleTweet} />
+                            {hashtag && <HashTagInput type='text' name='hashTag' placeholder='HashTag' onChange={handleTag} />}
                         </InputContainer>
                         {file &&
                             <ImgContainer>
@@ -142,6 +176,7 @@ function AddTweet() {
                                 <EqualizerRoundedIcon fontSize='small' />
                             </Tooltip>
                         </Icon>
+
 
 
                         <Icon onClick={handleClick} id={id}>
@@ -190,7 +225,11 @@ function AddTweet() {
                             </Tooltip>
                         </Icon>
 
-
+                        <Icon onClick={() => setHashTag(!hashtag)}>
+                            <Tooltip title="hashtag" arrow>
+                                <span style={{ fontWeight: '600', fontSize: '20px', marginBottom: '5px' }}>#</span>
+                            </Tooltip>
+                        </Icon>
                     </IconContainer>
                     <BtnContainer onClick={add_tweet}>
                         <span>Tweeter</span>
@@ -206,7 +245,7 @@ export default AddTweet
 const Container = styled.div`
 border:0.5px solid gray;
 border-top:none;
-border-bottom:none;
+
 `
 const AddContainer = styled.div`
 display:flex;
@@ -217,16 +256,18 @@ margin:0px 15px;
 const Top = styled.div`
 display:flex;
 align-items:flex-start;
-
+width:90%;
 `
 const Input = styled.div`
 display:flex;
 flex-direction:column;
+width:100%;
 `
 const Bottom = styled.div`
 display:flex;
 align-items:center;
 justify-content:space-between;
+
 `
 const UserImg = styled.div`
 img{
@@ -237,7 +278,7 @@ img{
 }
 `
 const InputContainer = styled.div`
-width:85%;
+width:100%;
 margin:0px 10px;
 `
 const TextInput = styled.textarea`
@@ -245,17 +286,15 @@ width:100%;
 color:white;
 background-color:transparent;
 border:none;
-
-//min-height:55px;
 padding:0px 15px;
 font-size:20px;
 resize:none;
 overflow:hidden;
 &:focus{
     outline:none;
-    //border-bottom:1px solid gray;
 }
 `
+const HashTagInput = styled(TextInput)``
 const IconContainer = styled.div`
 margin:10px 30px;
 display:flex;
@@ -328,6 +367,6 @@ height:35px;
 border-radius:50%;
 &:hover{
     background-color: rgba(21,32,43, 0.4);
-    //color:white;
+    
 }
 `
