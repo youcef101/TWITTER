@@ -8,41 +8,44 @@ import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTw
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { NavLink } from 'react-router-dom';
-import CommentModal from './CommentModal';
+import CommentModal from '../comment/CommentModal';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import PersonAddDisabledOutlinedIcon from '@material-ui/icons/PersonAddDisabledOutlined';
 import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import { useEffect } from 'react';
-import { axiosInstance } from '../axios';
+import { axiosInstance } from '../../axios';
 import { format } from 'timeago.js'
 import { useSelector } from 'react-redux';
-import { getCurrentTweet, likedTweet } from '../redux/apiCalls';
+import { getCurrentTweet, getHomeTweets, likedTweet } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
 
 
-function Post({ tweet, setIsLiked, isLiked }) {
+function Post({ tweet }) {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.current_user)
     const [tweet_user_infos, setTweetUserInfos] = useState(null)
     const [commentModal, setCommentModal] = useState(false)
     const [setting, setSetting] = useState(false)
+    const [isLiked, setIsLiked] = useState(false)
 
+    useEffect(() => {
+        setIsLiked(tweet?.likes.includes(user?._id))
+    }, [tweet?.likes, user?._id])
 
     const ClosePopup = () => {
-
+        const ele = document.getElementById('my-popup')
         window.addEventListener('mouseup', (e) => {
-            const ele = document.getElementById('my-popup')
+
             if (!ele?.contains(e.target)) {
                 setSetting(false)
             } else {
                 setSetting(true)
             }
+
         });
-        return () => {
-            setSetting(false)
-        }
     }
+
 
 
 
@@ -62,21 +65,30 @@ function Post({ tweet, setIsLiked, isLiked }) {
             setTweetUserInfos(null);
 
         };
-    }, [tweet])
+    }, [tweet?.userId])
 
 
-    const LikeTweet = () => {
+    const LikeTweet = async () => {
+
         const userId = {
             userId: user?._id
         }
-
-        likedTweet(tweet?._id, userId, dispatch)
-        setIsLiked(!isLiked)
+        try {
+            await axiosInstance.put(`/tweet/${tweet?._id}/like`, userId);
+            setIsLiked(!isLiked)
+        } catch (err) {
+            console.log(err)
+        }
+        /*        likedTweet(tweet?._id, userId, dispatch)
+               setIsLiked(!isLiked) */
     }
 
 
 
 
+
+
+    console.log(isLiked)
 
     return (<>
 
@@ -96,7 +108,7 @@ function Post({ tweet, setIsLiked, isLiked }) {
                             <Infos>
                                 <Info>
                                     <Username><a href="#">{tweet_user_infos?.fullname}</a></Username>
-                                    <Tag>@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</Tag>
+                                    <Tag>@{tweet_user_infos?.fullname?.replace(/ /g, '_')}.</Tag>
                                     <PostedDate>{format(tweet?.createdAt)}</PostedDate>
                                 </Info>
                                 <NavLink to={`/tweet/${tweet?._id}/get`}>
@@ -178,7 +190,7 @@ function Post({ tweet, setIsLiked, isLiked }) {
 
                             </Icon>
                             <Badge>5</Badge>
-                            {!tweet?.likes.includes(user?._id) ? <>
+                            {/* !tweet?.likes.includes(user?._id) */ !isLiked ? <>
                                 <Icon color='rose' onClick={LikeTweet}>
                                     <Tooltip title="Aimer" arrow>
                                         <FavoriteBorderIcon fontSize='small' />

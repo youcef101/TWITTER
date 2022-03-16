@@ -5,7 +5,8 @@ import Twitter from '@material-ui/icons/Twitter';
 import Tooltip from '@material-ui/core/Tooltip';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useState } from 'react';
-import { axiosInstance } from '../axios'
+import { axiosInstance } from '../../axios';
+
 
 function Register() {
     const history = useHistory()

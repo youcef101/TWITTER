@@ -1,13 +1,12 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
-import LeftBar from '../components/LeftBar'
-import Middle from '../components/Middle'
-import RightBar from '../components/RightBar'
-import Loading from '../components/Loading'
+import LeftBar from '../components/home/LeftBar'
+import Middle from '../components/home/Middle'
+import RightBar from '../components/home/RightBar'
+
 
 function Home() {
-    //const { isFetching } = useSelector(state => state.user)
+
     return (<Container>
         <LeftBar />
         <Middle />

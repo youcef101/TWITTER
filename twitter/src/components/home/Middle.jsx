@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
-import { getHomeTweets } from '../redux/apiCalls'
-import AccountSuggestions from './AccountSuggestions'
-import AddTweet from './AddTweet'
+
+import Posts from '../tweet/Posts'
+import AccountSuggestions from '../suggestion/AccountSuggestions'
+import AddTweet from '../tweet/AddTweet'
 import NavBar from './NavBar'
-import Posts from './Posts'
+import { getHomeTweets } from '../../redux/apiCalls'
+
 
 
 
@@ -14,11 +16,11 @@ function Middle() {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.current_user);
     const tweets = useSelector(state => state.tweet.tweets);
-    const [isLiked, setIsLiked] = useState(false)
+
 
     useEffect(() => {
         getHomeTweets(user?._id, dispatch)
-    }, [user?._id, dispatch, isLiked])
+    }, [user?._id, dispatch])
 
 
     return (
@@ -26,7 +28,7 @@ function Middle() {
             <NavBar />
             <AddTweet />
             <AccountSuggestions />
-            {tweets && < Posts tweets={tweets} setIsLiked={setIsLiked} isLiked={isLiked} />}
+            {tweets && < Posts tweets={tweets} />}
         </Container>
     )
 }

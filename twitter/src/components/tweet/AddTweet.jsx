@@ -11,8 +11,8 @@ import Picker from 'emoji-picker-react';
 import Popover from '@material-ui/core/Popover';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import app from '../firebase'
-import { addTweet } from '../redux/apiCalls';
+import app from '../../firebase'
+import { addTweet } from '../../redux/apiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 

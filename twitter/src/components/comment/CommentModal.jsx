@@ -11,10 +11,10 @@ import GifOutlinedIcon from '@material-ui/icons/GifOutlined';
 import EqualizerRoundedIcon from '@material-ui/icons/EqualizerRounded';
 import PermMediaOutlinedIcon from '@material-ui/icons/PermMediaOutlined';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import app from '../firebase'
+import app from '../../firebase'
 import { format } from 'timeago.js'
 import { useSelector } from 'react-redux';
-import { addComment } from '../redux/apiCalls';
+import { addComment } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
 
 function CommentModal({ setCommentModal, tweet, tweet_user_infos }) {

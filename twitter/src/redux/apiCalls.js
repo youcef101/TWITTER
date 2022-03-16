@@ -327,3 +327,26 @@ export const getAllUsers = async (dispatch) => {
         dispatch(getAllUsersFailure())
     }
 }
+
+//get user followers
+export const getUserFollowers = async (id, dispatch) => {
+    dispatch(getUserFollowersStart());
+    try {
+        const res = await axiosInstance.get(`/user/${id}/followers`);
+        const data = await res.data;
+        dispatch(getUserFollowersSuccess(data));
+    } catch (err) {
+        dispatch(getUserFollowersFailure())
+    }
+}
+//get user followings
+export const getUserFollowings = async (id, dispatch) => {
+    dispatch(getUserFollowingsStart());
+    try {
+        const res = await axiosInstance.get(`/user/${id}/followings`);
+        const data = await res.data;
+        dispatch(getUserFollowingsSuccess(data));
+    } catch (err) {
+        dispatch(getUserFollowingsFailure())
+    }
+}

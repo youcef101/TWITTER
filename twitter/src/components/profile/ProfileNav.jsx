@@ -2,9 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tooltip from '@material-ui/core/Tooltip';
+import { useSelector } from 'react-redux';
 
-function ProfileNav({ profileInfos }) {
-
+function ProfileNav() {
+    const profileInfos = useSelector(state => state.user.profileInfos)
     return (
         <Container>
 

@@ -1,18 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
-import Post from './Post'
+import Post from '../tweet/Post'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useSelector } from 'react-redux';
+import { getHomeTweets, getProfileTweets } from '../../redux/apiCalls';
+import { useDispatch } from 'react-redux';
 
 
-function Posts({ tweets, setIsLiked, isLiked }) {
-    //const scrollRef = useRef()
+function Posts({ tweets }) {
+
     const { isFetching } = useSelector(state => state.tweet)
-
-    /* useEffect(() => {
-        //scrollRef.current = window.scrollTo({ top: 0, behavior: 'smooth' });
-        scrollRef.current?.scrollIntoView({ top: 0, behavior: 'smooth' })
-    }, [tweets]) */
 
     return (<>
         {isFetching ?
@@ -23,9 +20,9 @@ function Posts({ tweets, setIsLiked, isLiked }) {
             <Container>
                 {tweets &&
                     tweets.map(tweet =>
-                        <div key={Math.random()} /* ref={scrollRef} */>
-                            <Post tweet={tweet} setIsLiked={setIsLiked} isLiked={isLiked} />
-                        </div>
+
+                        <Post tweet={tweet} key={Math.random()} />
+
                     )}
 
             </Container>

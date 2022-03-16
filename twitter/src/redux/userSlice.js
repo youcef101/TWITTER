@@ -7,7 +7,7 @@ const initialState = {
     followings: [],
     followers: [],
     suggestions: [],
-
+    profileInfos: null
 }
 
 const userSlice = createSlice({
@@ -168,6 +168,9 @@ const userSlice = createSlice({
             state.error = true;
             state.isFetching = false
         },
+        setProfileInfo: (state, action) => {
+            state.profileInfos = action.payload
+        }
 
     },
 
@@ -206,6 +209,7 @@ export const {
     getAllUsersSuccess,
     getCurrentUserFailure,
     getCurrentUserStart,
-    getCurrentUserSuccess
+    getCurrentUserSuccess,
+    setProfileInfo
 } = userSlice.actions
 export default userSlice.reducer

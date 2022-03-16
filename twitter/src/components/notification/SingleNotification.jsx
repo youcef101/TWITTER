@@ -7,7 +7,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import ShareOutlinedIcon from '@material-ui/icons/ShareOutlined';
 import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTwoTone';
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
-import CommentModal from './CommentModal';
+import CommentModal from '../comment/CommentModal';
 
 function SingleNotification() {
     const [commentModal, setCommentModal] = useState(false)

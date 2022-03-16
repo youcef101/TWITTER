@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import LeftBar from '../components/LeftBar'
-import RightBar from '../components/RightBar'
-import SingleTweet from '../components/SingleTweet'
+import LeftBar from '../components/home/LeftBar'
+import RightBar from '../components/home/RightBar'
+import SingleTweet from '../components/tweet/SingleTweet'
+
 
 function Tweet() {
     return (

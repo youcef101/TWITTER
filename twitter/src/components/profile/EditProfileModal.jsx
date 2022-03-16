@@ -4,17 +4,17 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import CameraAltOutlinedIcon from '@material-ui/icons/CameraAltOutlined';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import app from '../firebase'
+import app from '../../firebase'
 import Tooltip from '@material-ui/core/Tooltip';
 import { useDispatch } from 'react-redux';
-import { EditUserProfileCover, EditUserProfilePhoto, EditUser, getCurrentUser } from '../redux/apiCalls';
+import { EditUserProfileCover, EditUserProfilePhoto, EditUser, getCurrentUser } from '../../redux/apiCalls';
 import { useSelector } from 'react-redux';
 
 
 
 
-function EditProfileModal({ setEditModal, profileInfos, userId, setIsEdit, isEdit }) {
-
+function EditProfileModal({ setEditModal, userId, setIsEdit, isEdit }) {
+    const profileInfos = useSelector(state => state.user.profileInfos)
 
     const dispatch = useDispatch()
     const [couv_file, setCouvFile] = useState(null)

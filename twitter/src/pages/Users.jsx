@@ -1,22 +1,24 @@
 import React from 'react'
+import { useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
 import LeftBar from '../components/home/LeftBar'
-import Notification from '../components/notification/Notification'
 import RightBar from '../components/home/RightBar'
+import UsersStats from '../components/user_followers_followings/UsersStats'
 
-function Notifications() {
-    return (
+function Users() {
+
+    return (<>
         <Container>
             <LeftBar />
-            <Notification />
+            <UsersStats />
             <RightBar />
         </Container>
-    )
+
+    </>)
 }
 
-export default Notifications
+export default Users
 const Container = styled.div`
-flex:5;
 display:flex;
-//overflow-x:hidden;
+width:100%;
 `

@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import NotificationNav from './NotificationNav'
-import Posts from './Posts'
-import SingleNotification from './SingleNotification'
+import NotificationNav from '../notification/NotificationNav'
+import SingleNotification from '../notification/SingleNotification'
 
 function Notification() {
     return (

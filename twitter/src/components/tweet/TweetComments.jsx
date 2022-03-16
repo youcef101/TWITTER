@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { getTweetComments } from '../redux/apiCalls'
-import Comment from './Comment'
+import { getTweetComments } from '../../redux/apiCalls'
+import Comment from '../comment/Comment'
 
 function TweetComments({ setCommentModal, tweetId, tweet_user_infos }) {
     const dispatch = useDispatch()

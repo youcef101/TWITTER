@@ -12,7 +12,7 @@ import Twitter from '@material-ui/icons/Twitter';
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
-import { getCurrentUser } from '../redux/apiCalls';
+import { getCurrentUser } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
 
 const LeftBar = () => {
@@ -164,6 +164,8 @@ position:sticky;
 left:0;
 top:0;
 bottom:0;
+border-right:1px solid gray;
+
 `
 const MenuItems = styled.div`
 

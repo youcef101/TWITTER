@@ -5,7 +5,7 @@ import Twitter from '@material-ui/icons/Twitter';
 import Tooltip from '@material-ui/core/Tooltip';
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { LoginCalls } from '../redux/apiCalls';
+import { LoginCalls } from '../../redux/apiCalls';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Login() {

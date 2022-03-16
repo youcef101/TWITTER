@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Twitter from '@material-ui/icons/Twitter';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { LogoutCalls } from '../redux/apiCalls';
+import { LogoutCalls } from '../../redux/apiCalls';
 
 function SignOutAlert() {
     const dispatch = useDispatch()

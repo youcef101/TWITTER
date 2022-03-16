@@ -4,11 +4,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import { useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { axiosInstance } from '../axios';
+import { axiosInstance } from '../../axios';
 import { useEffect } from 'react';
-import { getUserSuggestions } from '../redux/apiCalls';
+import { getUserFollowings, getUserSuggestions } from '../../redux/apiCalls';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+
 
 
 function RightBar() {
@@ -17,15 +18,18 @@ function RightBar() {
     const { isFetching } = useSelector(state => state.user)
     const user = useSelector(state => state.user.current_user)
     const [isFollow, setIsFollow] = useState(false)
+    const [isSuivre, setIsSuivre] = useState(false)
     const dispatch = useDispatch()
 
     const FollowUser = async (id) => {
+        setIsSuivre(true)
         const userId = {
             userId: user?._id
         }
         try {
             await axiosInstance.put(`/user/${id}/follow`, userId);
             setIsFollow(!isFollow)
+            setIsSuivre(false)
         } catch (err) {
             console.log(err)
         }
@@ -35,6 +39,9 @@ function RightBar() {
         getUserSuggestions(user?._id, dispatch)
     }, [user?._id, dispatch, isFollow])
 
+    useEffect(() => {
+        isFollow && getUserFollowings(user?._id, dispatch)
+    }, [user?._id, dispatch, isFollow])
 
     return (
         <>
@@ -58,7 +65,7 @@ function RightBar() {
                         <Items>
                             {suggestions &&
                                 suggestions.map(suggest =>
-                                    <Item key={Math.random()}>
+                                    <Item key={suggest?._id}>
                                         <Right>
                                             <NavLink to={`/user/${suggest?._id}`}>
                                                 <UserImg>
@@ -67,12 +74,15 @@ function RightBar() {
                                             </NavLink>
                                             <Infos>
                                                 <Username>{suggest?.fullname}</Username>
-                                                <Tag>@{suggest?.fullname.replace(/ /g, '_')}</Tag>
+                                                <Tag>@{suggest?.fullname?.replace(/ /g, '_')}</Tag>
                                             </Infos>
                                         </Right>
                                         <Left>
-                                            <BtnContainer onClick={() => FollowUser(suggest?._id)}>
-                                                <span>Suivre</span>
+                                            <BtnContainer onClick={() => FollowUser(suggest?._id)} >
+                                                <span>
+                                                    {/*   {isSuivre ?
+                                                        <CircularProgress /> 
+                                                        : '*/}Suivre{/* '} */}</span>
                                             </BtnContainer>
                                         </Left>
                                     </Item>
@@ -88,6 +98,7 @@ function RightBar() {
 
 export default RightBar
 const Container = styled.div`
+border-left:1px solid gray;
 //flex:1.5;
 width:35%;
 height:100vh;

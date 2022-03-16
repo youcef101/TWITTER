@@ -1,19 +1,31 @@
 import React from 'react'
+import { useState } from 'react'
+import { Link, Route, Switch, useRouteMatch } from 'react-router-dom'
 import styled from 'styled-components'
-import LeftBar from '../components/LeftBar'
-import ProfilePage from '../components/ProfilePage'
-import RightBar from '../components/RightBar'
+import LeftBar from '../components/home/LeftBar'
+import RightBar from '../components/home/RightBar'
+import ProfilePage from '../components/profile/ProfilePage'
+import UsersStats from '../components/user_followers_followings/UsersStats'
+
+
 
 function Profile() {
+    const { path } = useRouteMatch()
 
-    return (
+
+    return (<>
         <Container>
             <LeftBar />
-            <ProfilePage />
-            <RightBar />
+            <Switch>
+                <Route exact path={`${path}`}> <ProfilePage /></Route>
+                <Route path={`${path}`}><UsersStats /></Route>
 
+            </Switch>
+
+            <RightBar />
         </Container>
-    )
+
+    </>)
 }
 
 export default Profile

@@ -3,21 +3,27 @@ import styled from 'styled-components'
 import RoomOutlinedIcon from '@material-ui/icons/RoomOutlined';
 import DateRangeOutlinedIcon from '@material-ui/icons/DateRangeOutlined';
 import CakeOutlinedIcon from '@material-ui/icons/CakeOutlined';
-import EditProfileModal from './EditProfileModal';
+import EditProfileModal from '../profile/EditProfileModal';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { getCurrentUser } from '../redux/apiCalls';
-import { axiosInstance } from '../axios';
+import { getCurrentUser } from '../../redux/apiCalls';
+import { axiosInstance } from '../../axios';
+import { Link, useRouteMatch } from 'react-router-dom';
+import { setProfileInfo } from '../../redux/userSlice';
 
 
-function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, setIsUnfollow, isFollow, isUnfollow */ }) {
+
+
+function ProfileInfos({ userId }) {
     const [editModal, setEditModal] = useState(false)
     const [isFollow, setIsFollow] = useState(false)
     const [isUnfollow, setIsUnfollow] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
     const user = useSelector(state => state.user.current_user)
     const dispatch = useDispatch()
+    const { path, url } = useRouteMatch()
+    const profileInfos = useSelector(state => state.user.profileInfos)
     const months = [
         "January",
         "February",
@@ -39,15 +45,14 @@ function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, s
             try {
                 const res = await axiosInstance.get(`/user/${userId}/get`);
                 const data = await res.data;
-                setProfileInfos(data)
+
+                dispatch(setProfileInfo(data))
             } catch (err) {
                 console.log(err)
             }
         }
         getProfileInfos();
-        return () => {
-            setProfileInfos(null)
-        }
+
     }, [userId, isEdit, isFollow, isUnfollow])
 
     const UnfollowUser = async (id) => {
@@ -78,7 +83,7 @@ function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, s
         getCurrentUser(user?._id, dispatch)
     }, [isFollow, isUnfollow])
 
-    return (
+    return (<>
         <Container>
             {profileInfos && <>
                 <ProfileCover>
@@ -97,7 +102,7 @@ function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, s
                             {!user?.followings.includes(profileInfos?._id) ?
                                 <BtnContainer onClick={() => FollowUser(profileInfos?._id)}>Suivre</BtnContainer>
                                 :
-                                <BtnContainer onClick={() => UnfollowUser(profileInfos?._id)}>ne suivre pas</BtnContainer>
+                                <BtnContainer onClick={() => UnfollowUser(profileInfos?._id)}>Se désabonner</BtnContainer>
                             }
                         </>}
                 </Infos>
@@ -136,27 +141,30 @@ function ProfileInfos({ userId, profileInfos, setProfileInfos/* , setIsFollow, s
                     </Middle>
                     <Bottom>
                         <Field>
-                            <a href="#">{profileInfos?.followings.length || 0}<span>abonnements</span></a>
+                            <Link to={`${url}/followings`} >{profileInfos?.followings.length || 0}<span>abonnements</span></Link>
                         </Field>
                         <Field>
-                            <a href="#">{profileInfos?.followers.length || 0}<span>abonné</span></a>
+                            <Link to={`${url}/followers`}>{profileInfos?.followers.length || 0}<span>abonné</span></Link>
 
                         </Field>
+
                     </Bottom>
+
                 </ProfileInfo>
             </>}
             {editModal &&
                 <EditProfileModal
                     setIsEdit={setIsEdit}
                     isEdit={isEdit}
-                    profileInfos={profileInfos}
+
                     setEditModal={setEditModal}
                     userId={userId}
                 />
             }
 
         </Container>
-    )
+
+    </>)
 }
 
 export default ProfileInfos

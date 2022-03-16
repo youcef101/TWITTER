@@ -8,7 +8,7 @@ import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTw
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
-import { axiosInstance } from '../axios';
+import { axiosInstance } from '../../axios';
 import { format } from 'timeago.js'
 
 function Comment({ setCommentModal, comment, tweet_user_infos }) {
