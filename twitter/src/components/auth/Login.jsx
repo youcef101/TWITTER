@@ -7,6 +7,7 @@ import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LoginCalls } from '../../redux/apiCalls';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { MobileMax, MobileMini } from '../../responsive';
 
 function Login() {
     const dispatch = useDispatch()
@@ -91,6 +92,12 @@ background-color:rgba(21,32,43,1.00);
 width:45%;
 border-radius:10px;
 padding:10px 10px;
+${MobileMax({
+    width: '60%'
+})};
+${MobileMini({
+    width: '85%'
+})}
 `
 const ModalHeader = styled.div`
 display:flex;

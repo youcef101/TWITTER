@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Twitter from '@material-ui/icons/Twitter';
 import { NavLink } from 'react-router-dom';
+import { MobileMax, MobileMini } from '../../responsive';
 
 function Account() {
     return (
@@ -43,6 +44,7 @@ const Container = styled.div`
 const AccountContainer = styled.div`
 flex:5;
 display:flex;
+
 `
 const Left = styled.div`
 flex:2;
@@ -54,10 +56,12 @@ display:flex;
 align-items:center;
 justify-content:center;
 
+
 `
 const Right = styled.div`
 flex:3;
 margin:25px 30px;
+
 `
 
 const Icon = styled.div`
@@ -65,23 +69,36 @@ position:absolute;
 color:white;
 .MuiSvgIcon-fontSizeLarge {
     font-size: 19rem;
-}
+};
+${MobileMax({
+    display: 'none'
+})};
+${MobileMini({
+    display: 'none'
+})};
 `
 const Top = styled.div`
 p{
     font-size:45px;
     font-weight:700;
+    ${MobileMax({
+    fontSize: '35px'
+})};
+${MobileMini({
+    fontSize: '30px'
+})};
 };
 span{
    font-size:35px;
-    font-weight:700; 
+    font-weight:700;
 }
 `
 const Ic = styled.div`
 color:white;
 .MuiSvgIcon-fontSizeLarge {
     font-size: 3rem;
-}
+};
+
 `
 const Bottom = styled.div`
 margin-top:50px;
@@ -109,7 +126,13 @@ border:1px solid gray;
 color:#0e87d8;
 &:hover{
     background-color: #223344;
-}
+};
+${MobileMax({
+    width: '45%'
+})};
+${MobileMini({
+    width: '55%'
+})};
 `
 const InscrireBtn = styled(ConnectBtn)`
  margin-bottom:15px;

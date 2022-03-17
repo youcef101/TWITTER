@@ -9,6 +9,8 @@ import { getUserFollowers, getUserFollowings } from '../../redux/apiCalls'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
+import { MobileMax } from '../../responsive';
+import FooterNav from '../responsive/FooterNav'
 
 function UsersStats() {
     const { path } = useRouteMatch()
@@ -28,19 +30,21 @@ function UsersStats() {
     return (
         <Container>
             <UsersNav />
-            <Switch>
-                <Route path={`${path}/followers`}>
-                    {followers &&
-                        followers.map(follower => <FollowersList follower={follower} key={Math.random()} />)}
-                </Route>
-                <Route path={`${path}/followings`}>
-                    {followings &&
-                        followings.map(following =>
-                            <FollowingsList following={following} key={Math.random()} />
-                        )}
-                </Route>
-            </Switch>
-
+            <UserContainer>
+                <Switch>
+                    <Route path={`${path}/followers`}>
+                        {followers &&
+                            followers.map(follower => <FollowersList follower={follower} key={Math.random()} />)}
+                    </Route>
+                    <Route path={`${path}/followings`}>
+                        {followings &&
+                            followings.map(following =>
+                                <FollowingsList following={following} key={Math.random()} />
+                            )}
+                    </Route>
+                </Switch>
+            </UserContainer>
+            <FooterNav />
         </Container>
     )
 }
@@ -48,4 +52,13 @@ function UsersStats() {
 export default UsersStats
 const Container = styled.div`
 width:40%;
+${MobileMax({
+    width: '100%',
+    overflowX: 'hidden'
+})}
+`
+const UserContainer = styled.div`
+${MobileMax({
+    marginBottom: '50px'
+})}
 `

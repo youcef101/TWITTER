@@ -14,6 +14,7 @@ import { useEffect } from 'react';
 import { getCurrentTweet } from '../../redux/apiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { axiosInstance } from '../../axios';
+import { MobileMax } from '../../responsive';
 
 function TweetPost() {
     const dispatch = useDispatch()
@@ -144,6 +145,9 @@ function TweetPost() {
 
 export default TweetPost
 const Container = styled.div`
+${MobileMax({
+    marginBottom: '50px'
+})}
 
 `
 const TweetContainer = styled.div`
@@ -224,6 +228,9 @@ img{
     width:100%;
     height:400px;
     object-fit:cover;
+    ${MobileMax({
+    height: '280px'
+})}
 }
 `
 const PostedDate = styled.div`

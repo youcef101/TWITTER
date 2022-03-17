@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { getUserFollowings, getUserSuggestions } from '../../redux/apiCalls';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Ipad, IpadMax, IpadMini, Surface } from '../../responsive';
 
 
 
@@ -99,8 +100,7 @@ function RightBar() {
 export default RightBar
 const Container = styled.div`
 border-left:1px solid gray;
-//flex:1.5;
-width:35%;
+width:30%;
 height:100vh;
 display:flex;
 align-items:center;
@@ -109,6 +109,15 @@ top:0;
 right:0;
 bottom:0;
 flex-direction:column;
+/* @media only screen and (min-width:750px){
+    display:none;
+} */
+${Ipad({
+    display: 'none'
+})};
+${IpadMax({
+    display: 'none'
+})}
 
 `
 
@@ -139,10 +148,11 @@ input{
 const SuggestionContainer = styled.div`
 margin:30px 0px;
 background-color:#223344;
-border-radius:15px;
+border-radius:4px;
 width:90%;
 overflow:scroll;
 overflow-x:hidden;
+
 ::-webkit-scrollbar {
   width: 10px;
   height:5px;
@@ -167,7 +177,8 @@ cursor:pointer;
 justify-content:space-between;
 &:hover{
     background-color:#334d66;
-}
+};
+${Surface({ flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'flex-start' })}
 `
 const Title = styled.h2`
 margin:10px 30px;
@@ -213,6 +224,7 @@ span{
 const Right = styled.div`
 display:flex;
 align-items:center;
+${Surface({ padding: '10px' })}
 `
 const Left = styled.div`
 display:flex;

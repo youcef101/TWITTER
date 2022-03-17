@@ -5,6 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useSelector } from 'react-redux';
 import { getHomeTweets, getProfileTweets } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
+import { MobileMax } from '../../responsive';
 
 
 function Posts({ tweets }) {
@@ -32,4 +33,7 @@ function Posts({ tweets }) {
 
 export default Posts
 const Container = styled.div`
+${MobileMax({
+    marginBottom: '50px'
+})}
 `

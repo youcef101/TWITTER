@@ -4,6 +4,7 @@ import Twitter from '@material-ui/icons/Twitter';
 import { NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { LogoutCalls } from '../../redux/apiCalls';
+import { MobileMax } from '../../responsive';
 
 function SignOutAlert() {
     const dispatch = useDispatch()
@@ -67,15 +68,16 @@ justify-content:center;
 const AlertContainer = styled.div`
 background-color:rgba(21,32,43,1.00);
 width:23%;
-height:60vh;
 border-radius:10px;
 padding:10px 10px;
-
+${MobileMax({
+    width: '60%'
+})}
 
 `
 const Alert = styled.div`
 width:100%;
-
+margin-bottom:15px;
 `
 const Top = styled.div`
 margin:15px 0px;

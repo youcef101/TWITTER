@@ -19,6 +19,7 @@ import { format } from 'timeago.js'
 import { useSelector } from 'react-redux';
 import { getCurrentTweet, getHomeTweets, likedTweet } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
+import { MobileMax, MobileMini } from '../../responsive';
 
 
 function Post({ tweet }) {
@@ -273,7 +274,9 @@ const Info = styled.div`
 margin:0px 10px;
 display:flex;
 align-items:center;
-
+${MobileMini({
+    flexWrap: 'wrap'
+})}
 `
 const Username = styled.span`
 font-weight:600;
@@ -313,6 +316,13 @@ img{
     height:60vh;
     object-fit:cover;
     border-radius:8px;
+    ${MobileMax({
+    width: '85%',
+    height: '50vh'
+})};
+${MobileMini({
+    height: '30vh'
+})}
 }
 `
 const IconContainer = styled.div`
@@ -336,6 +346,9 @@ display:flex;
 align-items:center;
 justify-content:center;
 color:gray;
+${MobileMini({
+    margin: '0px 20px'
+})};
 &:hover{
     transition: all 0.5s ease;
     color:${props => {
@@ -365,7 +378,9 @@ color:gray;
 font-size:12px;
 margin-bottom:-4px;
 margin-left:-38px;
-
+${MobileMini({
+    marginLeft: '-25px'
+})}
 `
 const SettingPopup = styled.div`
 position:absolute;
@@ -402,7 +417,6 @@ display:flex;
 align-items:center;
 `
 
-const TweetText = styled.div``
 const HashTag = styled.div`
 color:rgb(29, 155, 240);
 font-weight:600;
@@ -413,7 +427,10 @@ margin-top:20px;
 const Text = styled.div`
 width:95%;
 p{
-//font-weight:600;
 font-size:18px;
-}
+};
+${MobileMax({
+    width: '100%',
+
+})}
 `

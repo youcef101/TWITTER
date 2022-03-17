@@ -14,6 +14,8 @@ import { useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { getCurrentUser } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
+import { Ipad, MobileMax, Surface } from '../../responsive';
+import AddIcon from '@material-ui/icons/Add';
 
 const LeftBar = () => {
     const user = useSelector(state => state.user.current_user)
@@ -108,7 +110,8 @@ const LeftBar = () => {
                     </NavLink>
                 </Item>
                 <BtnContainer>
-                    <span>Tweeter</span>
+                    {/* <span> tweeter</span> */}
+                    <AddIcon fontSize="large" />
                 </BtnContainer>
                 <Bottom>
                     <UserImg>
@@ -165,13 +168,22 @@ left:0;
 top:0;
 bottom:0;
 border-right:1px solid gray;
-
+${Surface({ width: '10%' })};
+${Ipad({ width: '12%' })};
+${MobileMax({
+    display: 'none'
+})}
 `
 const MenuItems = styled.div`
-
+${Surface({
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'column'
+})}
 `
 const Item = styled.div`
-
 a{
 color:white;
 text-decoration:none;
@@ -180,24 +192,41 @@ cursor:pointer;
 align-items:center;
 margin:10px 0px;
 padding:5px 15px;
-
+${Surface({
+    alignItems: 'flex-end',
+    padding: '0px',
+    height: '50px',
+    width: '50px',
+    margin: '5px 0px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+})}
 span{
     font-size:22px;
     font-weight:600;
+    ${Surface({ display: 'none' })}
 };
  &:hover{
     background-color:#2a4055;
     border-radius:30px;
-} 
+     ${Surface({ borderRadius: '50%' })}
+}
 }
 `
 const Ite = styled(Item)`
 a{
     color:white;
     text-decoration:none;
+     ${Surface({
+    height: '50px',
+    width: '50px',
+    borderRadius: '50%',
+    padding: '0px'
+})}
 &:hover{
     background-color:rgba(21,32,43,1.00);
-}
+
 }
 `
 const Icon = styled.div`
@@ -213,7 +242,8 @@ border-radius:30px;
 cursor:pointer;
 padding:10px 40px;
 background-color:rgb(29, 155, 240);
-display:flex;
+display:none;
+width:50%;
 align-items:center;
 justify-content:center;
 span{
@@ -223,7 +253,15 @@ span{
 };
 &:hover{
     background-color: #0c78c0;
-}
+};
+${Surface({
+    width: '60px',
+    height: '60px',
+    borderRadius: '50%',
+    padding: '0px',
+    marginTop: '15px',
+    display: 'flex'
+})}
 `
 const Bottom = styled.div`
 display:flex;
@@ -234,7 +272,8 @@ padding:5px 10px;
 &:hover{
     background-color:#2a4055;
     border-radius:30px;
-}
+};
+${Surface({ display: 'none' })}
 `
 const UserImg = styled.div`
 margin-right:5px;
@@ -276,10 +315,10 @@ border-radius:50%;
 display:flex;
 align-items:center;
 justify-content:center;
-&:hover{
-    background-color:  #052d48;
-    transition: all 1s ease;
-}
+// &:hover{
+//     background-color:  #052d48;
+//     transition: all 1s ease;
+// }
 `
 const ModalContainer = styled.div`
 position:absolute;

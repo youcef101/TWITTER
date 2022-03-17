@@ -7,6 +7,7 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { axiosInstance } from '../../axios'
 import { getCurrentUser, getUserFollowings } from '../../redux/apiCalls'
+import { MobileMax } from '../../responsive'
 
 function FollowingsList({ following }) {
     const dispatch = useDispatch()

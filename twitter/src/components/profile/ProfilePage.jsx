@@ -10,6 +10,8 @@ import { useLocation } from 'react-router-dom'
 import { useState } from 'react'
 import Posts from '../tweet/Posts'
 import { CircularProgress } from '@material-ui/core'
+import FooterNav from '../responsive/FooterNav'
+import { MobileMax } from '../../responsive'
 
 
 
@@ -40,6 +42,7 @@ function ProfilePage() {
                 : <>
 
                     {timeline_tweets && <Posts tweets={timeline_tweets} />}  </>}
+            <FooterNav />
         </Container>
 
     </>)
@@ -48,4 +51,7 @@ function ProfilePage() {
 export default ProfilePage
 const Container = styled.div`
 flex:2;
+${MobileMax({
+    overflowX: 'hidden'
+})}
 `

@@ -40,12 +40,7 @@ function App() {
           </Route>
           <Route path='/user/:userId'  >
             <Profile />
-            {/*  <Route path='followers'>
-              <Users />
-            </Route>
-            <Route path='followings'>
-              <Users />
-            </Route> */}
+
           </Route>
 
           <Route path='/tweet/:tweetId/get'>

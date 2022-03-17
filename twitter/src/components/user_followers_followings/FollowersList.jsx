@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom'
 import styled from 'styled-components'
 import { axiosInstance } from '../../axios'
 import { getCurrentUser, getUserFollowers, getUserFollowings, getUserSuggestions } from '../../redux/apiCalls'
+import { MobileMax } from '../../responsive'
 
 function FollowersList({ follower }) {
     const dispatch = useDispatch()
@@ -143,6 +144,9 @@ cursor:pointer;
 background-color:#223344;
 padding:0px 3px;
 font-size:14px;
+${MobileMax({
+    display: 'none'
+})}
 `
 const Bottom = styled.div``
 const Bio = styled.div`

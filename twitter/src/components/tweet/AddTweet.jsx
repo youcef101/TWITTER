@@ -15,6 +15,7 @@ import app from '../../firebase'
 import { addTweet } from '../../redux/apiCalls';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { IpadMini, MobileMax, SurfaceMini } from '../../responsive';
 
 
 
@@ -245,7 +246,10 @@ export default AddTweet
 const Container = styled.div`
 border:0.5px solid gray;
 border-top:none;
-
+padding:5px 0px;
+${MobileMax({
+    marginTop: '50px'
+})}
 `
 const AddContainer = styled.div`
 display:flex;
@@ -268,6 +272,15 @@ display:flex;
 align-items:center;
 justify-content:space-between;
 
+${IpadMini({
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+
+})};
+${SurfaceMini({
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+})}
 `
 const UserImg = styled.div`
 img{
@@ -300,6 +313,9 @@ margin:10px 30px;
 display:flex;
 align-items:center;
 color:rgb(29, 155, 240);
+${MobileMax({
+    margin: '10px 10px'
+})};
 `
 const Icon = styled.div`
 margin:0px 5px;
@@ -329,7 +345,16 @@ padding:10px 20px;
 cursor:pointer;
 &:hover{
     background-color: #0c78c0;
-}
+};
+${IpadMini({
+    marginLeft: '30px',
+    marginBottom: '15px'
+
+})};
+${SurfaceMini({
+    marginLeft: '30px',
+    marginBottom: '15px'
+})}
 
 `
 

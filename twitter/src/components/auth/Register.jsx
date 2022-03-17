@@ -6,6 +6,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { NavLink, useHistory } from 'react-router-dom';
 import { useState } from 'react';
 import { axiosInstance } from '../../axios';
+import { MobileMax, MobileMini } from '../../responsive';
 
 
 function Register() {
@@ -94,6 +95,12 @@ background-color:rgba(21,32,43,1.00);
 width:45%;
 border-radius:10px;
 padding:10px 10px;
+${MobileMax({
+    width: '60%'
+})};
+${MobileMini({
+    width: '85%'
+})}
 `
 const ModalHeader = styled.div`
 display:flex;

@@ -36,7 +36,6 @@ border-left:0.5px solid gray;
 border-right:0.5px solid gray;
 display:flex;
 align-items:center;
-//justify-content:space-between;
 padding:0px 10px;
 `
 const Icon = styled.div`

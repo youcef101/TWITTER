@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import FooterNav from '../responsive/FooterNav'
 import TweetNav from './TweetNav'
 import TweetPost from './TweetPost'
 
@@ -8,6 +9,7 @@ function SingleTweet() {
         <Container>
             <TweetNav />
             <TweetPost />
+            <FooterNav />
         </Container>
     )
 }

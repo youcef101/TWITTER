@@ -8,6 +8,7 @@ import ShareOutlinedIcon from '@material-ui/icons/ShareOutlined';
 import ChatBubbleOutlineTwoToneIcon from '@material-ui/icons/ChatBubbleOutlineTwoTone';
 import CachedTwoToneIcon from '@material-ui/icons/CachedTwoTone';
 import CommentModal from '../comment/CommentModal';
+import { MobileMax } from '../../responsive';
 
 function SingleNotification() {
     const [commentModal, setCommentModal] = useState(false)
@@ -128,6 +129,9 @@ function SingleNotification() {
 
 export default SingleNotification
 const Container = styled.div`
+${MobileMax({
+    marginBottom: '50px'
+})}
 `
 const NewTweetNotification = styled.div`
 cursor:pointer;
