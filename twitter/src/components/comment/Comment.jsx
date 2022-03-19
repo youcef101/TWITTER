@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { axiosInstance } from '../../axios';
 import { format } from 'timeago.js'
+import { MobileMax } from '../../responsive';
 
 function Comment({ setCommentModal, comment, tweet_user_infos }) {
     const [like, setLike] = useState(false)
@@ -66,7 +67,7 @@ function Comment({ setCommentModal, comment, tweet_user_infos }) {
                 </Link>
                 <Bottom>
                     <IconContainer>
-                        <Ic onClick={() => setCommentModal(true)} color='blue'>
+                        <Ic /* onClick={() => setCommentModal(true)} */ color='blue'>
                             <Tooltip title="Répondre" placement="bottom" arrow>
                                 <ChatBubbleOutlineTwoToneIcon fontSize='small' />
                             </Tooltip>
@@ -148,6 +149,9 @@ const UserInfo = styled.div``
 const Up = styled.div`
 display:flex;
 align-items:center;
+${MobileMax({
+    flexWrap: 'wrap'
+})}
 `
 const Down = styled.div`
 color:gray;

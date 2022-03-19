@@ -17,7 +17,7 @@ function Tweet() {
 
 export default Tweet
 const Container = styled.div`
-flex:5;
+width:100%;
 display:flex;
-//overflow-x:hidden;
+
 `

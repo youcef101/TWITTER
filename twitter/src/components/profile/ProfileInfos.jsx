@@ -11,6 +11,7 @@ import { getCurrentUser } from '../../redux/apiCalls';
 import { axiosInstance } from '../../axios';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { setProfileInfo } from '../../redux/userSlice';
+import { MobileMini } from '../../responsive';
 
 
 
@@ -238,6 +239,11 @@ color:gray;
 display:flex;
 align-items:center;
 margin-right:15px;
+span{
+    ${MobileMini({
+    fontSize: '13px'
+})}
+}
 `
 const Field = styled.div`
 margin-right:15px;

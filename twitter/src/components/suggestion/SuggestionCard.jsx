@@ -2,8 +2,46 @@ import React from 'react'
 import styled from 'styled-components'
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import { NavLink } from 'react-router-dom';
+import { axiosInstance } from '../../axios';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { getUserFollowings, getUserSuggestions } from '../../redux/apiCalls';
 
 function SuggestionCard({ suggest }) {
+    const { isFetching } = useSelector(state => state.user)
+    const user = useSelector(state => state.user.current_user)
+    const [isFollow, setIsFollow] = useState(false)
+    const [isSuivre, setIsSuivre] = useState(false)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        setIsFollow(user?.followings.includes(suggest?._id))
+
+    }, [user?.followings, suggest?._id])
+
+    const FollowUser = async () => {
+        setIsSuivre(true)
+        const userId = {
+            userId: user?._id
+        }
+        try {
+            await axiosInstance.put(`/user/${suggest?._id}/follow`, userId);
+            setIsFollow(!isFollow)
+            //setIsSuivre(false)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getUserSuggestions(user?._id, dispatch)
+    }, [user?._id, dispatch, isFollow])
+
+    useEffect(() => {
+        isFollow && getUserFollowings(user?._id, dispatch)
+    }, [user?._id, dispatch, isFollow])
     return (
         <Container>
             <Icon>
@@ -21,7 +59,7 @@ function SuggestionCard({ suggest }) {
                     <Fullname> <NavLink to={`/user/${suggest?._id}`}>{suggest?.fullname}</NavLink></Fullname>
                     <Tag>@{suggest?.fullname.replace(/ /g, '_')}</Tag>
                 </Infos>
-                <Btn>suivre</Btn>
+                <Btn onClick={FollowUser}>suivre</Btn>
             </Card>
         </Container>
     )

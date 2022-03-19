@@ -29,10 +29,14 @@ function Post({ tweet }) {
     const [commentModal, setCommentModal] = useState(false)
     const [setting, setSetting] = useState(false)
     const [isLiked, setIsLiked] = useState(false)
+    const [like, setLike] = useState(tweet?.likes.length || null)
+    const [comments, setComments] = useState(tweet?.comments.length || null)
 
     useEffect(() => {
-        setIsLiked(tweet?.likes.includes(user?._id))
+        setIsLiked(tweet?.likes.includes(user?._id));
     }, [tweet?.likes, user?._id])
+
+
 
     const ClosePopup = () => {
         const ele = document.getElementById('my-popup')
@@ -76,20 +80,15 @@ function Post({ tweet }) {
         }
         try {
             await axiosInstance.put(`/tweet/${tweet?._id}/like`, userId);
+            setLike(isLiked ? like - 1 : like + 1)
             setIsLiked(!isLiked)
         } catch (err) {
             console.log(err)
         }
-        /*        likedTweet(tweet?._id, userId, dispatch)
-               setIsLiked(!isLiked) */
+
     }
 
 
-
-
-
-
-    console.log(isLiked)
 
     return (<>
 
@@ -182,7 +181,7 @@ function Post({ tweet }) {
                                 </Tooltip>
 
                             </Icon>
-                            <Badge>3</Badge>
+                            <Badge>{comments}</Badge>
                             <Icon color='green'>
                                 <Tooltip title="Retweeter" arrow>
                                     <CachedTwoToneIcon fontSize='small' />
@@ -197,14 +196,14 @@ function Post({ tweet }) {
                                         <FavoriteBorderIcon fontSize='small' />
                                     </Tooltip>
                                 </Icon>
-                                <Badge>105</Badge>
+                                <Badge>{like}</Badge>
                             </> : <>
                                 <Icon color='rose' onClick={LikeTweet} style={{ color: 'rgb(255, 0, 102)' }}>
                                     <Tooltip title="Aimer" arrow>
                                         <FavoriteIcon fontSize='small' />
                                     </Tooltip>
                                 </Icon>
-                                <Badge>105</Badge>
+                                <Badge>{like}</Badge>
 
                             </>}
 
@@ -225,7 +224,10 @@ function Post({ tweet }) {
                     <CommentModal
                         setCommentModal={setCommentModal}
                         tweet={tweet}
-                        tweet_user_infos={tweet_user_infos} />
+                        tweet_user_infos={tweet_user_infos}
+                        setComments={setComments}
+                        comments={comments}
+                    />
                 }
             </Container>
         </>}</>
@@ -377,7 +379,7 @@ const Badge = styled.div`
 color:gray;
 font-size:12px;
 margin-bottom:-4px;
-margin-left:-38px;
+margin-left:-45px;
 ${MobileMini({
     marginLeft: '-25px'
 })}

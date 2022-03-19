@@ -16,8 +16,9 @@ import { format } from 'timeago.js'
 import { useSelector } from 'react-redux';
 import { addComment } from '../../redux/apiCalls';
 import { useDispatch } from 'react-redux';
+import { Ipad, IpadMax, IpadMini, MobileMax, MobileMini, Surface, SurfaceMini } from '../../responsive';
 
-function CommentModal({ setCommentModal, tweet, tweet_user_infos }) {
+function CommentModal({ setCommentModal, tweet, tweet_user_infos, setComments, comments }) {
     const dispatch = useDispatch()
     const user = useSelector(state => state.user.current_user)
     const [File, setFile] = useState(null)
@@ -94,6 +95,7 @@ function CommentModal({ setCommentModal, tweet, tweet_user_infos }) {
 
             }
             addComment(newComment, dispatch)
+            setComments(comments + 1)
             setComment([])
             setFile(null)
             setCommentModal(false)
@@ -125,15 +127,16 @@ function CommentModal({ setCommentModal, tweet, tweet_user_infos }) {
                             </Info>
                         </Top>
                         <Content>
-                            <div style={{ marginLeft: '40px', color: 'rgb(29, 155, 240)', cursor: 'pointer', fontSize: '17px', fontWeight: '600' }}>
+                            <HashTag >
                                 {tweet?.hashTag}
-                            </div>
+                            </HashTag>
                             <Right>{tweet?.content}</Right>
-                            <div style={{ marginLeft: '40px', marginTop: '15px' }}>
-                                <img src={tweet?.tweetImage} alt='' style={{ height: '200px' }} />
-                            </div>
+                            <TweetImage >
+                                <img src={tweet?.tweetImage} alt='' />
+                            </TweetImage>
                             <Left>
-                                En réponse à <a href="#">@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</a></Left>
+                                En réponse à <a href="#">@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</a>
+                            </Left>
                         </Content>
 
                     </CommentContainer>
@@ -266,6 +269,27 @@ overflow-y:scroll;
   background: #b3b3b3;
   border-radius: 10px;
 };
+${MobileMax({
+    width: '95%'
+})};
+${IpadMini({
+    width: '85%',
+})};
+${Ipad({
+    width: '75%',
+})};
+${IpadMax({
+    width: '65%',
+})};
+${SurfaceMini({
+    width: '60%',
+})};
+${Surface({
+    width: '55%',
+})};
+${MobileMini({
+    width: '95%'
+})}
 
 `
 const ModalHeader = styled.div`
@@ -320,6 +344,11 @@ img{
 const Info = styled.div`
 display:flex;
 align-items:flex-start;
+${MobileMax({
+    flexWrap: 'wrap',
+
+})};
+
 `
 const Username = styled.span`
 margin-right:5px;
@@ -365,15 +394,33 @@ overflow:hidden;
 }
 `
 const ModalBottom = styled.div`
-
 margin-bottom:10px;
 margin-left:60px;
+${MobileMax({
+    marginLeft: '20px',
 
+})};
+${IpadMini({
+    marginLeft: '20px',
+})}
 `
 const Bottom = styled.div`
 display:flex;
 align-items:center;
 justify-content:space-between;
+${MobileMax({
+    flexDirection: 'column',
+
+})};
+${IpadMini({
+    flexDirection: 'column',
+})};
+${Ipad({
+    flexDirection: 'column',
+})};
+${IpadMax({
+    flexDirection: 'column',
+})};
 `
 const IconContainer = styled.div`
 //margin:10px 30px;
@@ -453,4 +500,32 @@ border-radius:50%;
     background-color: rgba(21,32,43, 0.4);
     color:white;
 }
+`
+const HashTag = styled.div`
+margin-left: 40px;
+color: rgb(29, 155, 240);
+cursor: pointer;
+font-size: 17px;
+font-weight: 600 ;
+`
+const TweetImage = styled.div`
+margin-left: 40px;
+margin-top:15px;
+img{
+height:200px;
+${MobileMax({
+    width: '100%'
+})};
+${IpadMini({
+    width: '100%',
+    height: '190px'
+})}
+};
+${MobileMax({
+    marginLeft: '10px',
+    width: '85%'
+})};
+${IpadMini({
+    width: '85%'
+})}
 `

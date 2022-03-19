@@ -18,12 +18,20 @@ import { MobileMax } from '../../responsive';
 
 function TweetPost() {
     const dispatch = useDispatch()
+    const user = useSelector(state => state.user.current_user)
     const [commentModal, setCommentModal] = useState(false)
-    const [like, setLike] = useState(false)
+    const [like, setLike] = useState(null)
     const [tweet_user_infos, setTweetUserInfos] = useState(null)
     const location = useLocation();
     const tweetId = location.pathname.split("/")[2];
     const tweet = useSelector(state => state.tweet.tweet)
+    const [isLiked, setIsLiked] = useState(false)
+
+
+    useEffect(() => {
+        setIsLiked(tweet?.likes.includes(user?._id));
+    }, [tweet?.likes, user?._id])
+
     useEffect(() => {
         getCurrentTweet(tweetId, dispatch)
     }, [tweetId, dispatch])
@@ -38,8 +46,28 @@ function TweetPost() {
                 console.log(err)
             }
         }
-        getTweetUserInfos()
+        getTweetUserInfos();
+        return () => {
+            setTweetUserInfos(null)
+        }
     }, [tweet])
+
+
+    const LikeTweet = async () => {
+
+        const userId = {
+            userId: user?._id
+        }
+        try {
+            await axiosInstance.put(`/tweet/${tweet?._id}/like`, userId);
+            setLike(isLiked ? like - 1 : like + 1)
+            setIsLiked(!isLiked)
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
+
     return (
         <Container>
             <TweetContainer>
@@ -84,7 +112,7 @@ function TweetPost() {
                         <StatsContainer>
                             <Item><a href="#">23 <span>Retweets</span></a></Item>
                             <Item><a href="#">5 <span>Tweets cités</span></a></Item>
-                            <Item><a href="#">462 <span>J'aime</span></a></Item>
+                            <Item><a href="#">{tweet?.likes.length + like}<span>J'aime</span></a></Item>
                         </StatsContainer>
                     </TweetStats>
                     <Bottom>
@@ -102,8 +130,8 @@ function TweetPost() {
                                 </Tooltip>
 
                             </Ic>
-                            {!like ?
-                                <Ic color='rose' onClick={() => setLike(!like)}>
+                            {!isLiked ?
+                                <Ic color='rose' onClick={LikeTweet}>
                                     <Tooltip title="Aimer" placement="bottom" arrow>
                                         <FavoriteBorderIcon fontSize='small' />
 
@@ -111,7 +139,7 @@ function TweetPost() {
 
                                 </Ic>
                                 :
-                                <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
+                                <Ic color='rose' onClick={LikeTweet} style={{ color: 'rgb(255, 0, 102)' }}>
                                     <Tooltip title="Aimer" placement="bottom" arrow>
                                         <FavoriteRoundedIcon fontSize='small' />
                                     </Tooltip>
@@ -269,7 +297,7 @@ a{
 `
 const Bottom = styled.div`
 padding:10px 5px;
-//border-bottom:1px solid gray;
+margin-top:5px;
 
 `
 const IconContainer = styled.div`

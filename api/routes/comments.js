@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
 router.post('/add', async (req, res) => {
     try {
         const comment = await Comment.create(req.body);
+        await Tweet.findByIdAndUpdate(req.body.tweetId, { $push: { comments: req.body.userId } })
         res.status(200).send(comment)
     } catch (err) {
         res.status(500).send(err)

@@ -9,6 +9,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { useDispatch } from 'react-redux';
 import { EditUserProfileCover, EditUserProfilePhoto, EditUser, getCurrentUser } from '../../redux/apiCalls';
 import { useSelector } from 'react-redux';
+import { Ipad, IpadMax, IpadMini, MobileMax, MobileMini } from '../../responsive';
 
 
 
@@ -284,6 +285,22 @@ overflow:scroll;
   background: #b3b3b3;
   border-radius: 10px;
 };
+
+${MobileMax({
+    width: '95%'
+})};
+${IpadMini({
+    width: '80%'
+})};
+${Ipad({
+    width: '70%'
+})}
+${IpadMax({
+    width: '60%'
+})};
+${MobileMini({
+    width: '95%'
+})};
 `
 const ModalHeader = styled.div`
 height:50px;

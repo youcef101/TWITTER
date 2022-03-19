@@ -23,17 +23,7 @@ function TweetComments({ setCommentModal, tweetId, tweet_user_infos }) {
                         tweet_user_infos={tweet_user_infos}
                     />
                 )}
-            {/*  <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} />
-            <Comment setCommentModal={setCommentModal} commentModal={commentModal} /> */}
+
         </Container>
     )
 }
