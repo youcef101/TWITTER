@@ -3,13 +3,16 @@ import styled from 'styled-components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 function ProfileNav() {
     const profileInfos = useSelector(state => state.user.profileInfos)
+    const history = useHistory()
+
     return (
         <Container>
 
-            <Icon>
+            <Icon onClick={history.goBack}>
                 <Tooltip title="Verso" arrow>
                     <ArrowBackIcon fontSize='small' />
                 </Tooltip>

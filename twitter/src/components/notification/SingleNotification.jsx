@@ -40,7 +40,10 @@ function SingleNotification() {
                     </UserImg>
                     <Info>
                         <p><a href='#'>youcef_khadem </a>et <a href='#'>Scopper_Gapan</a> a aimé votre réponse.</p>
-                        <div style={{ textAlign: 'right' }}>هؤلاء اذا اعطيتهم الحقيقة وأكدت لهم ان الملك بعيد عن هؤلاء الصعاليك في القوة، الإنجاز، القيادة وكل شىء سيمرضون، سيموتون من قهرهم، لذلك يكذبون كذبة على أنفسهم وعلى منطقتهم وعلى كل شيء حتى يمر يومهم، وإلا ستجد الإكتئاب يملئهم، لماذا لوفي أقوى لماذا لماذا هههه شوي ويبكون من القهر</div>
+                        <div style={{ textAlign: 'left' }}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus congue turpis,
+                            eu congue ligula consectetur sed.
+                            Nunc volutpat nunc massa. In mollis leo vitae lectus vulputate tristique.</div>
                     </Info>
                 </Infos>
             </LikeCommentNotification>
@@ -62,7 +65,10 @@ function SingleNotification() {
                 </TopPost>
 
                 <Content >
-                    لان اودا مخرف وهباد بكل بساطة
+                    Lorem ipsum dolor sit amet,
+                    consectetur adipiscing elit.
+                    Sed dapibus congue turpis, eu congue ligula consectetur sed.
+                    Nunc volutpat nunc massa. In mollis leo vitae lectus vulputate tristique.
                 </Content>
                 <Bottom>
                     <IconContainer>
@@ -115,7 +121,7 @@ function SingleNotification() {
                     </UserImg>
                     <Info>
                         <p><a href='#'>youcef_khadem </a>et <a href='#'>Scopper_Gapan</a> a aimé votre tweets.</p>
-                        <div style={{ textAlign: 'right' }}>هؤلاء اذا اعطيتهم الحقيقة وأكدت لهم ان الملك بعيد عن هؤلاء الصعاليك في القوة، الإنجاز، القيادة وكل شىء سيمرضون، سيموتون من قهرهم، لذلك يكذبون كذبة على أنفسهم وعلى منطقتهم وعلى كل شيء حتى يمر يومهم، وإلا ستجد الإكتئاب يملئهم، لماذا لوفي أقوى لماذا لماذا هههه شوي ويبكون من القهر</div>
+                        <div style={{ textAlign: 'left', width: '100%' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed dapibus congue turpis, eu congue ligula consectetur sed. Nunc volutpat nunc massa. In mollis leo vitae lectus vulputate tristique.</div>
                     </Info>
                 </Infos>
             </LikeTweetNotification>
@@ -246,9 +252,9 @@ color:gray
 `
 
 const Content = styled.div`
-margin:10px 0px;
-width:100%;
-text-align:right;
+margin:10px 35px;
+width:95%;
+text-align:left;
 `
 const Bottom = styled.div`
 width:100%;

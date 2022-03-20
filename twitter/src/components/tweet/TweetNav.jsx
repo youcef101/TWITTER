@@ -2,11 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tooltip from '@material-ui/core/Tooltip';
+import { useHistory } from 'react-router-dom';
 
 function TweetNav() {
+    const history = useHistory()
     return (
         <Container>
-            <Icon>
+            <Icon onClick={history.goBack}>
                 <Tooltip title="Verso" arrow>
                     <ArrowBackIcon fontSize='small' />
                 </Tooltip>

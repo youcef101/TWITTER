@@ -10,11 +10,19 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { axiosInstance } from '../../axios';
 import { format } from 'timeago.js'
-import { MobileMax } from '../../responsive';
+import { useSelector } from 'react-redux';
+import { MobileMax, MobileMini } from '../../responsive';
 
-function Comment({ setCommentModal, comment, tweet_user_infos }) {
-    const [like, setLike] = useState(false)
+function Comment({ comment, tweet_user_infos }) {
     const [comment_user_infos, setCommentUserInfos] = useState(null)
+    const user = useSelector(state => state.user.current_user)
+    const [isLiked, setIsLiked] = useState(false)
+    const [like, setLike] = useState(comment?.likes.length || null)
+
+
+    useEffect(() => {
+        setIsLiked(comment?.likes.includes(user?._id));
+    }, [comment?.likes, user?._id])
 
     useEffect(() => {
         const getCommentUserInfos = async () => {
@@ -36,78 +44,98 @@ function Comment({ setCommentModal, comment, tweet_user_infos }) {
         /********************************************************* */
     }, [comment])
 
-    return (
-        <Container>
 
-            <CommentContainer>
-                <TopPost>
-                    <UserImage>
-                        <img src={comment_user_infos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
-                    </UserImage>
-                    <UserInfo>
-                        <Up>
-                            <Username><a href='#'>{comment_user_infos?.fullname}</a></Username>
-                            <Tag>@{comment_user_infos?.fullname.replace(/ /g, '_')}.</Tag>
-                            <PostedDate>{format(comment?.createdAt)}</PostedDate>
-                        </Up>
-                        <Down>
-                            En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</span>
-                        </Down>
-                    </UserInfo>
-                </TopPost>
-                <Link to='/tweet'>
+    const LikeComment = async () => {
+
+        const userId = {
+            userId: user?._id
+        }
+        try {
+            await axiosInstance.put(`/comment/${comment?._id}/like`, userId);
+            setLike(isLiked ? like - 1 : like + 1)
+            setIsLiked(!isLiked)
+        } catch (err) {
+            console.log(err)
+        }
+
+    }
+
+    return (<>
+        {comment && comment_user_infos &&
+            <Container>
+
+                <CommentContainer>
+                    <TopPost>
+                        <UserImage>
+                            <img src={comment_user_infos?.profileImage || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt='' />
+                        </UserImage>
+                        <UserInfo>
+                            <Up>
+                                <Username><a href='#'>{comment_user_infos?.fullname}</a></Username>
+                                <Tag>@{comment_user_infos?.fullname.replace(/ /g, '_')}.</Tag>
+                                <PostedDate>{format(comment?.createdAt)}</PostedDate>
+                            </Up>
+                            <Down>
+                                En réponse à <span style={{ color: 'rgb(29, 155, 240)' }}>@{tweet_user_infos?.fullname.replace(/ /g, '_')}.</span>
+                            </Down>
+                        </UserInfo>
+                    </TopPost>
+                    {/* <Link to='/tweet'> */}
                     <Content >
                         {comment?.content}
                     </Content>
                     {comment?.commentImage &&
                         <div>
-                            <img src={comment?.commentImage} alt='' style={{ height: '200px' }} />
+                            <img src={comment?.commentImage} alt='' style={{ height: '200px', width: '90%' }} />
                         </div>
                     }
-                </Link>
-                <Bottom>
-                    <IconContainer>
-                        <Ic /* onClick={() => setCommentModal(true)} */ color='blue'>
-                            <Tooltip title="Répondre" placement="bottom" arrow>
-                                <ChatBubbleOutlineTwoToneIcon fontSize='small' />
-                            </Tooltip>
+                    {/* </Link> */}
+                    <Bottom>
+                        <IconContainer>
+                            <Ic /* onClick={() => setCommentModal(true)} */ color='blue'>
+                                <Tooltip title="Répondre" placement="bottom" arrow>
+                                    <ChatBubbleOutlineTwoToneIcon fontSize='small' />
+                                </Tooltip>
 
-                        </Ic>
-                        <Ic color='green'>
-                            <Tooltip title="Retweeter" placement="bottom" arrow>
-                                <CachedTwoToneIcon fontSize='small' />
-
-                            </Tooltip>
-
-                        </Ic>
-                        {!like ?
-                            <Ic color='rose' onClick={() => setLike(!like)}>
-                                <Tooltip title="Aimer" placement="bottom" arrow>
-                                    <FavoriteBorderIcon fontSize='small' />
+                            </Ic>
+                            <Ic color='green'>
+                                <Tooltip title="Retweeter" placement="bottom" arrow>
+                                    <CachedTwoToneIcon fontSize='small' />
 
                                 </Tooltip>
 
                             </Ic>
-                            :
-                            <Ic color='rose' onClick={() => setLike(!like)} style={{ color: 'rgb(255, 0, 102)' }}>
-                                <Tooltip title="Aimer" placement="bottom" arrow>
-                                    <FavoriteRoundedIcon fontSize='small' />
+                            {!isLiked ? <>
+                                <Ic color='rose' onClick={LikeComment}>
+                                    <Tooltip title="Aimer" placement="bottom" arrow>
+                                        <FavoriteBorderIcon fontSize='small' />
+
+                                    </Tooltip>
+
+                                </Ic>
+                                <Badge>{like}</Badge>
+                            </> : <>
+                                <Ic color='rose' onClick={LikeComment} style={{ color: 'rgb(255, 0, 102)' }}>
+                                    <Tooltip title="Aimer" placement="bottom" arrow>
+                                        <FavoriteRoundedIcon fontSize='small' />
+                                    </Tooltip>
+
+                                </Ic>
+                                <Badge>{like}</Badge>
+                            </>}
+                            <Ic color='blue'>
+                                <Tooltip title="Partager" placement="bottom" arrow>
+                                    <ShareOutlinedIcon fontSize='small' />
                                 </Tooltip>
-
                             </Ic>
-                        }
-                        <Ic color='blue'>
-                            <Tooltip title="Partager" placement="bottom" arrow>
-                                <ShareOutlinedIcon fontSize='small' />
-                            </Tooltip>
-                        </Ic>
-                    </IconContainer>
-                </Bottom>
+                        </IconContainer>
+                    </Bottom>
 
-            </CommentContainer>
+                </CommentContainer>
 
-        </Container>
-    )
+            </Container>
+        }
+    </>)
 }
 
 export default Comment
@@ -225,4 +253,16 @@ justify-content:center;
         }
     }} ;
 }
+`
+const Badge = styled.div`
+color:gray;
+font-size:12px;
+margin-bottom:-4px;
+margin-left:-60px;
+${MobileMini({
+    marginLeft: '-25px'
+})};
+${MobileMax({
+    marginLeft: '-40px'
+})}
 `

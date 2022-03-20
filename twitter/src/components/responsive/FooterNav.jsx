@@ -11,36 +11,44 @@ function FooterNav() {
     return (
         <Container>
             <MenuItems>
-                <Item>
-                    <NavLink to='/'>
+                <NavLink exact to='/'>
+                    <Item>
+
                         <Icon>
                             <HomeRoundedIcon />
                         </Icon>
-                    </NavLink>
-                </Item>
-                <Item>
-                    <NavLink to='#'>
+
+                    </Item>
+                </NavLink>
+                <a href='#'>
+                    <Item>
+
                         <Icon>
                             <SearchIcon />
                         </Icon>
-                    </NavLink>
-                </Item>
-                <Item>
-                    <NavLink to='/notifications'>
+
+                    </Item>
+                </a>
+                <NavLink to='/notifications'>
+                    <Item>
+
                         <Icon>
                             <NotificationsNoneIcon />
                             <Badge>3</Badge>
                         </Icon>
-                    </NavLink>
-                </Item>
-                <Item>
-                    <NavLink to='#'>
+
+                    </Item>
+                </NavLink>
+                <a href='#'>
+                    <Item>
+
                         <Icon>
                             <MailOutlineIcon />
                             <Badge>2</Badge>
                         </Icon>
-                    </NavLink>
-                </Item>
+
+                    </Item>
+                </a>
             </MenuItems>
         </Container>
     )
@@ -55,8 +63,8 @@ z-index:998;
 bottom:0;
 right:0;
 left:0;
-border-left:0.5px solid gray;
-border-right:0.5px solid gray;
+//border-left:0.5px solid gray;
+//border-right:0.5px solid gray;
 display:none;
 padding:0px 10px;
 ${MobileMax({
@@ -68,10 +76,25 @@ width:100%;
 display:flex;
 align-items:center;
 justify-content:space-around;
+
+a{
+    color:gray
+}
+a.active{
+    color:white
+}
 `
-const Item = styled.div``
+const Item = styled.div`
+/* color:gray;
+a{
+    color:gray
+}
+a.active{
+    color:white
+} */
+`
 const Icon = styled.div`
-color:white;
+//color:white;
 width:40px;
 height:40px;
 border-radius:50%;
@@ -81,7 +104,8 @@ justify-content:center;
 &:hover{
     background-color:#2a4055;
     transition:1s;
-}
+};
+
 `
 const Badge = styled.div`
 width:16px;
@@ -93,5 +117,6 @@ justify-content:center;
 font-size:10px;
 margin-left:-12px;
 margin-top:-14px;
-background-color:rgb(29, 155, 240)
+background-color:rgb(29, 155, 240);
+color:white;
 `

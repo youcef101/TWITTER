@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import Tooltip from '@material-ui/core/Tooltip';
-import { NavLink, useRouteMatch } from 'react-router-dom';
+import { NavLink, useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
@@ -11,10 +11,11 @@ import { useSelector } from 'react-redux';
 function UsersNav() {
     const { url } = useRouteMatch();
     const infos = useSelector(state => state.user.profileInfos)
+    const history = useHistory()
     return (
         <Container>
             <Top>
-                <Icon>
+                <Icon onClick={history.goBack}>
                     <Tooltip title="Verso" arrow>
                         <ArrowBackIcon fontSize='small' />
                     </Tooltip>
@@ -25,7 +26,7 @@ function UsersNav() {
                 </Info>
             </Top>
             <Bottom>
-                <NavLink to={`${url}/followings`}>
+                <NavLink exact to={`${url}/followings`}>
                     Abonné
                 </NavLink>
                 <NavLink to={`${url}/followers`} >
@@ -70,13 +71,15 @@ width:50%;
 padding:15px 10px;
 color:white;
 text-decoration:none;
-
 &:hover{
         background-color: #223344;
         transition:1s;
        
 }
 }
+a.active{
+  background-color: #223344;  
+};
 `
 const Icon = styled.div`
 cursor:pointer;

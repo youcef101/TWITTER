@@ -26,7 +26,7 @@ function TweetPost() {
     const tweetId = location.pathname.split("/")[2];
     const tweet = useSelector(state => state.tweet.tweet)
     const [isLiked, setIsLiked] = useState(false)
-
+    const [comments, setComments] = useState(tweet?.comments.length || null)
 
     useEffect(() => {
         setIsLiked(tweet?.likes.includes(user?._id));
@@ -134,9 +134,7 @@ function TweetPost() {
                                 <Ic color='rose' onClick={LikeTweet}>
                                     <Tooltip title="Aimer" placement="bottom" arrow>
                                         <FavoriteBorderIcon fontSize='small' />
-
                                     </Tooltip>
-
                                 </Ic>
                                 :
                                 <Ic color='rose' onClick={LikeTweet} style={{ color: 'rgb(255, 0, 102)' }}>
@@ -165,7 +163,10 @@ function TweetPost() {
                 <CommentModal
                     tweet={tweet}
                     tweet_user_infos={tweet_user_infos}
-                    setCommentModal={setCommentModal} />
+                    setCommentModal={setCommentModal}
+                    setComments={setComments}
+                    comments={comments}
+                />
             }
         </Container>
     )
@@ -235,7 +236,9 @@ display:flex;
 align-items:center;
 flex-direction:column;
 `
-const TweetText = styled.div``
+const TweetText = styled.div`
+width:100%;
+`
 const HashTag = styled.span`
 color:rgb(29, 155, 240);
 font-weight:600;
@@ -243,6 +246,7 @@ font-size:20px;
 cursor:pointer;
 `
 const Text = styled.div`
+
 p{
 font-weight:600;
 font-size:20px;
@@ -255,7 +259,7 @@ img{
     cursor:pointer;
     width:100%;
     height:400px;
-    object-fit:cover;
+    //object-fit:cover;
     ${MobileMax({
     height: '280px'
 })}

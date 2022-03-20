@@ -80,6 +80,7 @@ function CommentModal({ setCommentModal, tweet, tweet_user_infos, setComments, c
                             commentImage: downloadURL
                         }
                         addComment(newComment, dispatch)
+                        setComments(comments + 1)
                         setComment([])
                         setFile(null)
                         setCommentModal(false)

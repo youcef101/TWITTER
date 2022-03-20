@@ -34,7 +34,6 @@ function Login() {
     }
 
 
-    console.log(isFetching)
 
     return (
         <Container>
