@@ -71,5 +71,24 @@ router.get('/all/get', async (req, res) => {
     }
 })
 
+//like comment
+router.put('/:commentId/like', async (req, res) => {
+    const comment = await Comment.findById(req.params.commentId);
+    try {
+
+        if (!comment.likes.includes(req.body.userId)) {
+            const cmt = await Comment.findByIdAndUpdate(req.params.commentId, { $push: { likes: req.body.userId } }, { new: true })
+            //const id = like.likes.find(id => id === req.body.userId)
+            res.status(200).send(cmt)
+        } else {
+            const cmt = await Comment.findByIdAndUpdate(req.params.commentId, { $pull: { likes: req.body.userId } }, { new: true })
+            res.status(200).send(cmt)
+        }
+
+    } catch (err) {
+        res.status(500).send(err)
+    }
+})
+
 
 module.exports = router
